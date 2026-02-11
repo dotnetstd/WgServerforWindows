@@ -33,6 +33,7 @@ namespace WgServerforWindows.Models
                 .Property(a => a.CustomNetNatRange)
                 .Property(a => a.TunnelServiceName)
                 .Property(a => a.DoNotShowTemporaryProfileWarning)
+                .Property(a => a.Language)
                 .Track(this);
         }
 
@@ -86,6 +87,16 @@ namespace WgServerforWindows.Models
             set => Set(nameof(DoNotShowTemporaryProfileWarning), ref _doNotShowTemporaryProfileWarning, value);
         }
         private bool _doNotShowTemporaryProfileWarning;
+
+        /// <summary>
+        /// The selected language code (e.g. "en-US", "zh-CN")
+        /// </summary>
+        public string Language
+        {
+            get => _language;
+            set => Set(nameof(Language), ref _language, value);
+        }
+        private string _language = "en-US";
 
         /// <summary>
         /// The public tracker instance located in Public\Documents. Can be used to track things other than the <see cref="Instance"/>.

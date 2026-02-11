@@ -629,4 +629,25 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="TCPPortConflictMessage" xml:space="preserve">
     <value>Another process is listening on TCP Port {0}. Since WireGuard uses UDP, there should not (but there may) be a conflict. Do you wish to proceed?</value>
   </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Filter...</value>
+  </data>
+  <data name="ConfigurationFilesFilter" xml:space="preserve">
+    <value>Configuration Files (*.conf)|*.conf</value>
+  </data>
+  <data name="LanguageSelection" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="RestartRequiredTitle" xml:space="preserve">
+    <value>Restart Required</value>
+  </data>
+  <data name="RestartRequiredText" xml:space="preserve">
+    <value>Changing the language requires restarting the application to take effect. Do you want to restart now?</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

@@ -98,6 +98,10 @@ _Chutzpah*
 
 # Visual C++ cache files
 ipch/
+
+# Trae
+.trae/
+build_output.txt
 *.aps
 *.ncb
 *.opendb

@@ -11,125 +11,155 @@
              d:DataContext="{d:DesignInstance Type={x:Type models:PrerequisiteItem}}" d:DesignWidth="800"
              x:Name="This">
     <Grid>
-        <Grid Visibility="{c:Binding !HasChildren, FalseToVisibility=Collapsed}">
-            <Grid.Style>
-                <Style TargetType="Grid">
+        <!-- Main Content Card -->
+        <Border Visibility="{c:Binding !HasChildren, FalseToVisibility=Collapsed}">
+            <Border.Style>
+                <Style TargetType="Border" BasedOn="{StaticResource ModernCardStyle}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsChild, ElementName=This}" Value="True">
-                            <Setter Property="Margin" Value="7,10,7,10"/>
+                            <Setter Property="Margin" Value="20,5,20,5"/>
+                            <Setter Property="Background" Value="#FAFAFA"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsChild, ElementName=This}" Value="False">
-                            <Setter Property="Margin" Value="20,10,20,10"/>
+                            <Setter Property="Margin" Value="10,5,10,5"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </Grid.Style>
+            </Border.Style>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" Visibility="{c:Binding HasIcon, FalseToVisibility=Collapsed}">
-                <Image Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
-                <Image Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
-                <Image Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
+                <!-- Icon Column -->
+                <Grid Grid.Column="0" Visibility="{c:Binding HasIcon, FalseToVisibility=Collapsed}" VerticalAlignment="Center" Margin="0,0,15,0">
+                    <Border Width="50" Height="50" CornerRadius="25" BorderThickness="2" Background="White">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="BorderBrush" Value="#DDDDDD"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Fulfilled}" Value="True">
+                                        <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Fulfilled}" Value="False">
+                                        <Setter Property="BorderBrush" Value="{StaticResource ErrorBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsInformational}" Value="True">
+                                        <Setter Property="BorderBrush" Value="{StaticResource InfoBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Image Height="24" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
+                            <Image Height="24" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
+                            <Image Height="24" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Text Column -->
+                <Grid Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="{Binding Title}" Style="{StaticResource HeaderTextStyle}"
+                           ToolTip="{Binding Title}" TextTrimming="CharacterEllipsis"/>
+
+                    <TextBlock Grid.Row="1" Text="{Binding SuccessMessage}" Style="{StaticResource SubHeaderTextStyle}"
+                           ToolTip="{Binding SuccessMessage}"
+                           Visibility="{c:Binding 'Fulfilled or IsInformational', FalseToVisibility=Collapsed}" Margin="0,5,0,0"/>
+                    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Style="{StaticResource SubHeaderTextStyle}" Foreground="{StaticResource ErrorBrush}"
+                           ToolTip="{Binding ErrorMessage}"
+                           Visibility="{c:Binding '!Fulfilled and !IsInformational', FalseToVisibility=Collapsed}" Margin="0,5,0,0"/>
+                </Grid>
+
+                <!-- Buttons Column -->
+                <Grid Grid.Column="2" Visibility="{c:Binding '!HasSubCommands'}" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <Button Content="{Binding ResolveText}" 
+                        Command="{Binding Commands.ResolveCommand}"
+                        Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
+                        IsEnabled="{Binding CanResolve}"
+                        Style="{StaticResource ModernButtonStyle}"/>
+                    <Button Content="{Binding ConfigureText}" 
+                        Command="{Binding Commands.ConfigureCommand}"
+                        Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
+                        IsEnabled="{Binding CanConfigure}"
+                        Style="{StaticResource ModernButtonStyle}"/>
+                </Grid>
+
+                <!-- SplitButtons -->
+                <Grid Grid.Column="2" Visibility="{c:Binding 'HasSubCommands'}" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <xctk:SplitButton x:Name="SplitButtonNotFulfilled" Height="32" Padding="10,5" Margin="5" VerticalAlignment="Center"
+                        Content="{Binding ResolveText}" 
+                        Command="{Binding Commands.ResolveCommand}"
+                        Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
+                        Background="{StaticResource PrimaryBrush}"
+                        Foreground="White">
+                        <xctk:SplitButton.DropDownContent>
+                            <ItemsControl ItemsSource="{Binding SubCommands}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Button Padding="5"
+                                                    Content="{Binding ResolveText}"
+                                                    HorizontalContentAlignment="Left"
+                                                    Command="{Binding Commands.ResolveCommand}"
+                                                    Visibility="{c:Binding '!Fulfilled'}"
+                                                    IsEnabled="{Binding CanResolve}"
+                                                    ToolTip="{Binding ErrorMessage}"/>
+                                            <Button Padding="5"
+                                                    Content="{Binding ConfigureText}" 
+                                                    HorizontalContentAlignment="Left"
+                                                    Command="{Binding Commands.ConfigureCommand}"
+                                                    Visibility="{c:Binding 'Fulfilled'}"
+                                                    IsEnabled="{Binding CanConfigure}"
+                                                    ToolTip="{Binding SuccessMessage}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </xctk:SplitButton.DropDownContent>
+                    </xctk:SplitButton>
+                    <xctk:SplitButton x:Name="SplitButtonFulfilled" Height="32" Padding="10,5" Margin="5" VerticalAlignment="Center"
+                        Content="{Binding ConfigureText}" 
+                        Command="{Binding Commands.ConfigureCommand}"
+                        Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
+                        Background="{StaticResource PrimaryBrush}"
+                        Foreground="White">
+                        <xctk:SplitButton.DropDownContent>
+                            <ItemsControl ItemsSource="{Binding SubCommands}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Button Padding="5"
+                                                    Content="{Binding ResolveText}"
+                                                    HorizontalContentAlignment="Left"
+                                                    Command="{Binding Commands.ResolveCommand}"
+                                                    Visibility="{c:Binding '!Fulfilled'}"
+                                                    IsEnabled="{Binding CanResolve}"
+                                                    ToolTip="{Binding ErrorMessage}"/>
+                                            <Button Padding="5"
+                                                    Content="{Binding ConfigureText}"
+                                                    HorizontalContentAlignment="Left"
+                                                    Command="{Binding Commands.ConfigureCommand}"
+                                                    Visibility="{c:Binding 'Fulfilled'}"
+                                                    IsEnabled="{Binding CanConfigure}"
+                                                    ToolTip="{Binding SuccessMessage}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </xctk:SplitButton.DropDownContent>
+                    </xctk:SplitButton>
+                </Grid>
             </Grid>
-
-            <Grid Grid.Column="1" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="DimGray"
-                       ToolTip="{Binding Title}" TextTrimming="CharacterEllipsis"
-                       VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Row="1" Text="{Binding SuccessMessage}"
-                       ToolTip="{Binding SuccessMessage}" TextWrapping="WrapWithOverflow"
-                       Visibility="{c:Binding 'Fulfilled or IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
-                <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}"
-                       ToolTip="{Binding ErrorMessage}" TextWrapping="WrapWithOverflow"
-                       Visibility="{c:Binding '!Fulfilled and !IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
-            </Grid>
-
-            <Grid Grid.Column="2" Visibility="{c:Binding '!HasSubCommands'}">
-                <Button Padding="5" Margin="5" VerticalAlignment="Center"
-                    Content="{Binding ResolveText}" 
-                    Command="{Binding Commands.ResolveCommand}"
-                    Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
-                    IsEnabled="{Binding CanResolve}"/>
-                <Button Padding="5" Margin="5" VerticalAlignment="Center"
-                    Content="{Binding ConfigureText}" 
-                    Command="{Binding Commands.ConfigureCommand}"
-                    Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
-                    IsEnabled="{Binding CanConfigure}"/>
-            </Grid>
-
-            <Grid Grid.Column="2" Visibility="{c:Binding 'HasSubCommands'}">
-                <xctk:SplitButton x:Name="SplitButtonNotFulfilled" Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
-                    Content="{Binding ResolveText}" 
-                    Command="{Binding Commands.ResolveCommand}"
-                    Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}">
-                    <xctk:SplitButton.DropDownContent>
-                        <ItemsControl ItemsSource="{Binding SubCommands}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <!-- Keep these buttons in sync with the dropdown buttons below. -->
-                                        <Button Padding="5"
-                                                Content="{Binding ResolveText}"
-                                                HorizontalContentAlignment="Left"
-                                                Command="{Binding Commands.ResolveCommand}"
-                                                Visibility="{c:Binding '!Fulfilled'}"
-                                                IsEnabled="{Binding CanResolve}"
-                                                ToolTip="{Binding ErrorMessage}"/>
-                                        <Button Padding="5"
-                                                Content="{Binding ConfigureText}" 
-                                                HorizontalContentAlignment="Left"
-                                                Command="{Binding Commands.ConfigureCommand}"
-                                                Visibility="{c:Binding 'Fulfilled'}"
-                                                IsEnabled="{Binding CanConfigure}"
-                                                ToolTip="{Binding SuccessMessage}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </xctk:SplitButton.DropDownContent>
-                </xctk:SplitButton>
-                <xctk:SplitButton x:Name="SplitButtonFulfilled" Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
-                    Content="{Binding ConfigureText}" 
-                    Command="{Binding Commands.ConfigureCommand}"
-                    Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}">
-                    <xctk:SplitButton.DropDownContent>
-                        <ItemsControl ItemsSource="{Binding SubCommands}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Button Padding="5"
-                                                Content="{Binding ResolveText}"
-                                                HorizontalContentAlignment="Left"
-                                                Command="{Binding Commands.ResolveCommand}"
-                                                Visibility="{c:Binding '!Fulfilled'}"
-                                                IsEnabled="{Binding CanResolve}"
-                                                ToolTip="{Binding ErrorMessage}"/>
-                                        <Button Padding="5"
-                                                Content="{Binding ConfigureText}"
-                                                HorizontalContentAlignment="Left"
-                                                Command="{Binding Commands.ConfigureCommand}"
-                                                Visibility="{c:Binding 'Fulfilled'}"
-                                                IsEnabled="{Binding CanConfigure}"
-                                                ToolTip="{Binding SuccessMessage}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </xctk:SplitButton.DropDownContent>
-                </xctk:SplitButton>
-            </Grid>
-        </Grid>
+        </Border>
 
         <TabControl Visibility="{c:Binding HasChildren, FalseToVisibility=Collapsed}" ItemsSource="{Binding ChildrenByCategory}" SelectedIndex="{Binding SelectedChildIndex}" Margin="10,5,10,5">
             <TabControl.ItemTemplate>

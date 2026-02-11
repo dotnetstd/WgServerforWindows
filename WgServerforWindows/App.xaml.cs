@@ -28,6 +28,22 @@ namespace WgServerforWindows
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Load language setting
+            var language = GlobalAppSettings.Instance.Language;
+            if (!string.IsNullOrEmpty(language))
+            {
+                try
+                {
+                    var culture = new System.Globalization.CultureInfo(language);
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = culture;
+                }
+                catch (Exception)
+                {
+                    // Fallback to default if culture is invalid
+                }
+            }
+
             base.OnStartup(e);
 
             if (e.Args.Any())

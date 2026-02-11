@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PrivateKeyProperty" xml:space="preserve">
+    <value>私钥</value>
+  </data>
+  <data name="PrivateKeyPropertyAction" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="ListenPortProperty" xml:space="preserve">
+    <value>监听端口</value>
+  </data>
+  <data name="AddressProperty" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="PropertyNameFormat" xml:space="preserve">
+    <value>{0}:</value>
+  </data>
+  <data name="KeyValidationError" xml:space="preserve">
+    <value>密钥不能为空</value>
+  </data>
+  <data name="PortRangeValidationError" xml:space="preserve">
+    <value>端口必须在 0 到 65535 之间。</value>
+  </data>
+  <data name="PortValidationError" xml:space="preserve">
+    <value>端口必须是数字。</value>
+  </data>
+  <data name="NetworkAddressValidationError" xml:space="preserve">
+    <value>网络地址必须是有效的 CIDR 格式。例如：192.168.1.0/24</value>
+  </data>
+  <data name="ValidationErrorFormat" xml:space="preserve">
+    <value>{0}
+    
+当前值: {1}
+
+{2}</value>
+  </data>
+  <data name="PropertyFormat" xml:space="preserve">
+    <value>{0}
+    
+当前值: {1}</value>
+  </data>
+  <data name="ServerConfiguration" xml:space="preserve">
+    <value>服务器配置</value>
+  </data>
+  <data name="ClientConfigurations" xml:space="preserve">
+    <value>客户端配置</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="ServerConfigurationSuccessMessage" xml:space="preserve">
+    <value>已找到服务器配置文件 (.conf)。</value>
+  </data>
+  <data name="ClientConfigurationsSuccessMessage" xml:space="preserve">
+    <value>已配置一个或多个客户端。</value>
+  </data>
+  <data name="ServerConfigurationMissingErrorMessage" xml:space="preserve">
+    <value>未找到服务器配置文件 (.conf)。</value>
+  </data>
+  <data name="ServerConfigurationResolveText" xml:space="preserve">
+    <value>创建并编辑服务器配置</value>
+  </data>
+  <data name="ClientConfigurationsMissingErrorMessage" xml:space="preserve">
+    <value>未配置客户端。</value>
+  </data>
+  <data name="ClientConfigurationsResolveText" xml:space="preserve">
+    <value>配置客户端</value>
+  </data>
+  <data name="ServerConfigurationConfigureText" xml:space="preserve">
+    <value>编辑服务器配置</value>
+  </data>
+  <data name="ServerConfigurationIncompleteErrorMessage" xml:space="preserve">
+    <value>服务器配置未完成。缺少字段或字段不正确。</value>
+  </data>
+  <data name="ScopeAddressRegistryIncorrect" xml:space="preserve">
+    <value>ScopeAddress 注册表项的值不正确。</value>
+  </data>
+  <data name="ClientConfigurationsIncompleteErrorMessage" xml:space="preserve">
+    <value>一个或多个客户端配置缺失或不正确。</value>
+  </data>
+  <data name="TunnelService" xml:space="preserve">
+    <value>隧道服务</value>
+  </data>
+  <data name="TunnelServiceInstalled" xml:space="preserve">
+    <value>隧道服务已安装。</value>
+  </data>
+  <data name="TunnelServiceNotInstalled" xml:space="preserve">
+    <value>隧道服务未安装。</value>
+  </data>
+  <data name="InstallTunnelService" xml:space="preserve">
+    <value>安装隧道服务</value>
+  </data>
+  <data name="UninstallTunnelService" xml:space="preserve">
+    <value>卸载隧道服务</value>
+  </data>
+  <data name="WireGuardExe" xml:space="preserve">
+    <value>WireGuard.exe</value>
+  </data>
+  <data name="WireGuardExeFound" xml:space="preserve">
+    <value>在 PATH 中找到 WireGuard.exe。</value>
+  </data>
+  <data name="WireGuardExeNotFound" xml:space="preserve">
+    <value>在 PATH 中未找到 WireGuard.exe。必须先下载并安装它。</value>
+  </data>
+  <data name="InstallWireGuard" xml:space="preserve">
+    <value>下载并安装 WireGuard</value>
+  </data>
+  <data name="UninstallWireGuard" xml:space="preserve">
+    <value>卸载 WireGuard</value>
+  </data>
+  <data name="EmptyClientNameError" xml:space="preserve">
+    <value>客户端必须有一个名称</value>
+  </data>
+  <data name="ClientConfiguration" xml:space="preserve">
+    <value>客户端配置</value>
+  </data>
+  <data name="NameProperty" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="AddClient" xml:space="preserve">
+    <value>添加客户端</value>
+  </data>
+  <data name="DeleteAction" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="ConfirmDeleteClient" xml:space="preserve">
+    <value>确定要删除此客户端吗？</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="PublicKeyProperty" xml:space="preserve">
+    <value>公钥</value>
+  </data>
+  <data name="PublicKeyPropertyAction" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="PresharedKeyProperty" xml:space="preserve">
+    <value>预共享密钥</value>
+  </data>
+  <data name="PresharedKeyPropertyAction" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="ClientPresharedKeyPropertyAction" xml:space="preserve">
+    <value>从服务器填充</value>
+  </data>
+  <data name="AllowedIpsProperty" xml:space="preserve">
+    <value>允许的 IP</value>
+  </data>
+  <data name="GenerateFromServerAction" xml:space="preserve">
+    <value>从服务器生成</value>
+  </data>
+  <data name="PopulateFromServerAction" xml:space="preserve">
+    <value>从服务器填充</value>
+  </data>
+  <data name="Undefined" xml:space="preserve">
+    <value>未定义</value>
+  </data>
+  <data name="GenerateClientAddressActionDescription" xml:space="preserve">
+    <value>生成一个服务器地址范围内的 IP（当前：{0}）</value>
+  </data>
+  <data name="PopulateClientAllowedIpsActionDescription" xml:space="preserve">
+    <value>从服务器配置填充默认的允许 IP（当前：{0}）</value>
+  </data>
+  <data name="DnsProperty" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DnsSearchDomainsProperty" xml:space="preserve">
+    <value>DNS 搜索域</value>
+  </data>
+  <data name="DnsSearchDomainsPropertyDescription" xml:space="preserve">
+    <value>也称为 DNS 后缀</value>
+  </data>
+  <data name="EndpointProperty" xml:space="preserve">
+    <value>端点
+(公网 IP:端口)</value>
+  </data>
+  <data name="EmptyEndpointValidation" xml:space="preserve">
+    <value>请输入 公网IP:端口 或 [IPv6]:端口 或 域名:端口 作为端点。</value>
+  </data>
+  <data name="EndpointPortMismatch" xml:space="preserve">
+    <value>端点端口应与监听端口属性匹配。</value>
+  </data>
+  <data name="GenerateQrCodeAction" xml:space="preserve">
+    <value>生成二维码</value>
+  </data>
+  <data name="ExportConfigurationFileAction" xml:space="preserve">
+    <value>导出配置文件</value>
+  </data>
+  <data name="ClientConfigurationTitle" xml:space="preserve">
+    <value>'{0}' 客户端配置</value>
+  </data>
+  <data name="ServerStatus" xml:space="preserve">
+    <value>服务器状态</value>
+  </data>
+  <data name="UpdateLive" xml:space="preserve">
+    <value>实时更新</value>
+  </data>
+  <data name="PrivateNetworkTitle" xml:space="preserve">
+    <value>专用网络</value>
+  </data>
+  <data name="PrivateNetworkSuccess" xml:space="preserve">
+    <value>网络已设置为专用，将允许共享。</value>
+  </data>
+  <data name="PrivateNetworkError" xml:space="preserve">
+    <value>网络当前是公用网络，这意味着某些重要的协议和端口将被阻止。</value>
+  </data>
+  <data name="PrivateNetworkResolve" xml:space="preserve">
+    <value>设为专用</value>
+  </data>
+  <data name="PrivateNetworkConfigure" xml:space="preserve">
+    <value>恢复为公用</value>
+  </data>
+  <data name="InternetSharingTitle" xml:space="preserve">
+    <value>Internet 共享</value>
+  </data>
+  <data name="InternetSharingSuccess" xml:space="preserve">
+    <value>Internet 共享已启用。</value>
+  </data>
+  <data name="InternetSharingError" xml:space="preserve">
+    <value>Internet 共享未启用，连接的对等端将无法访问网络。</value>
+  </data>
+  <data name="InternetSharingResolve" xml:space="preserve">
+    <value>启用 Internet 共享</value>
+  </data>
+  <data name="InternetSharingConfigure" xml:space="preserve">
+    <value>禁用 Internet 共享</value>
+  </data>
+  <data name="PersistentInternetSharingTitle" xml:space="preserve">
+    <value>持久化 Internet 共享</value>
+  </data>
+  <data name="PersistentInternetSharingSucecss" xml:space="preserve">
+    <value>持久化 Internet 共享已启用，并已创建计划任务以便在启动时重新启用共享。</value>
+  </data>
+  <data name="PersistentInternetSharingError" xml:space="preserve">
+    <value>持久化 Internet 共享未启用。重启后 WireGuard 隧道可能会失去网络访问权限。</value>
+  </data>
+  <data name="PersistentInternetSharingResolve" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="PersistentInternetSharingDisable" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="ServerAllowedIpsDescription" xml:space="preserve">
+    <value>指定哪些 IP 将从客户端路由到服务器。使用 0.0.0.0/0 路由所有流量。可指定多个路由，用逗号分隔，如 10.0.0.0/8, 192.168.1.0/24</value>
+  </data>
+  <data name="ClientAddressValidationError" xml:space="preserve">
+    <value>客户端地址必须至少是一个 IP 地址，如 10.232.0.2 或 10.232.0.2/32</value>
+  </data>
+  <data name="DnsAddressValidationError" xml:space="preserve">
+    <value>DNS 地址必须是有效的 IP，如 8.8.8.8</value>
+  </data>
+  <data name="DnsSearchDomainsValidationError" xml:space="preserve">
+    <value>DNS 搜索域必须是用逗号分隔的名称列表。</value>
+  </data>
+  <data name="PersistentKeepaliveValidationError" xml:space="preserve">
+    <value>持久连接保活必须是数值。使用 0 禁用此功能。</value>
+  </data>
+  <data name="PersistentKeepaliveProperty" xml:space="preserve">
+    <value>持久连接保活</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="SelectInterfaceTitle" xml:space="preserve">
+    <value>选择接口</value>
+  </data>
+  <data name="SelectInterfaceText" xml:space="preserve">
+    <value>选择应与 WireGuard 接口共享其 Internet 连接的公共网络接口。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="CopyDetails" xml:space="preserve">
+    <value>复制详细信息</value>
+  </data>
+  <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <value>应用程序遇到意外错误。
+
+'{0}'</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="WireGuardNetworkOnDomain" xml:space="preserve">
+    <value>共享网络在域上，因此无需更改 WireGuard 网络配置文件。</value>
+  </data>
+  <data name="CannotRestartInternetSharingNoNetwork" xml:space="preserve">
+    <value>无法重启 Internet 共享，因为当前未共享任何网络。请使用 --network 指定要共享的网络。</value>
+  </data>
+  <data name="CannotRestartInternetSharingMultipleNetworks" xml:space="preserve">
+    <value>无法重启 Internet 共享，因为当前共享了多个网络。请使用 --network 指定要共享的网络。</value>
+  </data>
+  <data name="DisablingInternetSharing" xml:space="preserve">
+    <value>Internet 共享已启用。正在禁用...</value>
+  </data>
+  <data name="EnablingInternetSharing" xml:space="preserve">
+    <value>正在启用网络 '{0}' 的 Internet 共享。</value>
+  </data>
+  <data name="EndpointPropertyAction" xml:space="preserve">
+    <value>检测公网 IP 地址</value>
+  </data>
+  <data name="EndpointPropertyActionDescription" xml:space="preserve">
+    <value>尝试使用 ipify.org 检测此机器当前的公网 (WAN) IP 地址。
+
+注意：建议使用 DDNS 域名以避免动态 WAN IP 的问题。</value>
+  </data>
+  <data name="FailedToIdentify" xml:space="preserve">
+    <value>识别失败...</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>识别成功！</value>
+  </data>
+  <data name="InternetConnectionSharing" xml:space="preserve">
+	  <value>Internet 连接共享 (ICS)</value>
+  </data>
+  <data name="NetworkAddressTranslation" xml:space="preserve">
+	  <value>网络地址转换 (NAT)</value>
+  </data>
+  <data name="NewNatName" xml:space="preserve">
+	  <value>NAT 路由</value>
+  </data>
+  <data name="NewNetError" xml:space="preserve">
+	  <value>NAT 未启用；连接的对等端将无法访问网络。</value>
+  </data>
+  <data name="NewNetSuccess" xml:space="preserve">
+	  <value>NAT 已启用。</value>
+  </data>
+  <data name="NewNatResolve" xml:space="preserve">
+	  <value>启用 NAT</value>
+  </data>
+  <data name="NewNatConfigure" xml:space="preserve">
+	  <value>禁用 NAT</value>
+  </data>
+  <data name="PromptForHyperV" xml:space="preserve">
+	  <value>WS4W 无法启用 NAT 路由。有时启用 Hyper-V 会有所帮助。您现在要启用 Hyper-V 吗？</value>
+  </data>
+  <data name="WS4W" xml:space="preserve">
+	  <value>WS4W</value>
+  </data>
+  <data name="PromptForHyperVReboot" xml:space="preserve">
+	  <value>安装 Hyper-V 后请记得重启。然后尝试再次启用 NAT 路由。</value>
+  </data>
+  <data name="NatRoutingNotSupported" xml:space="preserve">
+	  <value>此 Windows 配置可能不支持 NAT 路由。建议改用 Internet 连接共享 (ICS)。</value>
+  </data>
+  <data name="HyperVErrorNatRoutingNotSupported" xml:space="preserve">
+	  <value>Hyper-V 可能未成功安装，因此此 Windows 配置可能不支持 NAT 路由。建议改用 Internet 连接共享 (ICS)。</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandResolveText" xml:space="preserve">
+	  <value>启用自动 NAT 路由</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandConfigureText" xml:space="preserve">
+	  <value>禁用自动 NAT 路由</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandErrorMessage" xml:space="preserve">
+	  <value>NAT 路由不会在启动时自动配置。点击以启用。</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandSuccessMessage" xml:space="preserve">
+	  <value>NAT 路由将在启动时自动配置。点击以禁用。</value>
+  </data>
+  <data name="ChangeServerConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>更改服务器配置目录</value>
+  </data>
+  <data name="ChangeServerConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>当前目录：{0}</value>
+  </data>
+  <data name="OpenClientConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>打开客户端配置目录</value>
+  </data>
+  <data name="OpenClientConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>在文件资源管理器中打开路径：{0}</value>
+  </data>
+  <data name="OpenServerConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>打开服务器配置目录</value>
+  </data>
+  <data name="OpenServerConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>在文件资源管理器中打开路径：{0}</value>
+  </data>
+  <data name="ChangeClientConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>更改客户端配置目录</value>
+  </data>
+  <data name="ChangeClientConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>当前目录：{0}</value>
+  </data>
+  <data name="ServerStatusTitle" xml:space="preserve">
+	  <value>查看服务器状态</value>
+  </data>
+  <data name="ServerStatusConfigureText" xml:space="preserve">
+	  <value>查看</value>
+  </data>
+  <data name="ServerStatusSuccessMessage" xml:space="preserve">
+	  <value>查看服务器（接口）和所有已配置客户端（对等端）的实时状态。</value>
+  </data>
+  <data name="SplashScreenText" xml:space="preserve">
+	  <value>Wg Server for Windows</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandSuccessMessage" xml:space="preserve">
+	  <value>WireGuard 接口将在启动时自动设置为专用。点击以禁用。</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandErrorMessage" xml:space="preserve">
+	  <value>WireGuard 接口不会在启动时自动设置为专用。点击以启用。</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandResolveText" xml:space="preserve">
+	  <value>启用自动专用网络</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandConfigureText" xml:space="preserve">
+	  <value>禁用自动专用网络</value>
+  </data>
+  <data name="ServerSyncError" xml:space="preserve">
+    <value>同步服务器配置时出错。</value>
+  </data>
+  <data name="PublicKeyError" xml:space="preserve">
+    <value>为私钥生成公钥时出错：'{0}'。</value>
+  </data>
+  <data name="AllowedRoutableIpsProperty" xml:space="preserve">
+    <value>允许的 IP</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>全部展开</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>全部折叠</value>
+  </data>
+  <data name="FilteredClientCount" xml:space="preserve">
+    <value>数量：{0} (筛选自：{1})</value>
+  </data>
+  <data name="ClientCount" xml:space="preserve">
+    <value>数量：{0}</value>
+  </data>
+  <data name="LatestHandshakeProperty" xml:space="preserve">
+    <value>最近握手</value>
+  </data>
+  <data name="LatestHandshakePropertyDescription" xml:space="preserve">
+    <value>显示此客户端最近一次连接到服务器的时间。此字段仅供参考。</value>
+  </data>
+  <data name="LatestHandshakePropertyAction" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="BootTaskDelaySuccess" xml:space="preserve">
+    <value>设置启动时运行的自动任务的延迟。这有助于解决网络适配器加载缓慢的问题。</value>
+  </data>
+  <data name="BootTaskDelayConfigure" xml:space="preserve">
+    <value>设置启动任务延迟</value>
+  </data>
+  <data name="BootDelaySelectionTitle" xml:space="preserve">
+    <value>设置启动任务延迟</value>
+  </data>
+  <data name="BootDelaySelectionText" xml:space="preserve">
+    <value>设置启动时运行的自动任务的延迟 (时:分:秒)。</value>
+  </data>
+  <data name="SettingsConfigure" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="NetNatRangeSubCommandSuccessMessage" xml:space="preserve">
+    <value>指定自定义子网（必须是 WireGuard 网络的超集），允许其他适配器共享 NAT 网络</value>
+  </data>
+  <data name="NewNetNatRangeSubCommandConfigureText" xml:space="preserve">
+    <value>指定自定义 NAT 网络范围</value>
+  </data>
+  <data name="NetNatRangeSelectionTitle" xml:space="preserve">
+    <value>NAT 网络地址范围</value>
+  </data>
+  <data name="NetNatRangeSelectionText" xml:space="preserve">
+    <value>指定自定义 NAT 网络范围：</value>
+  </data>
+  <data name="NetNatRangeValidationError" xml:space="preserve">
+    <value>NAT 网络范围未包含 WireGuard 服务器范围 ({0})。</value>
+  </data>
+  <data name="TunnelServiceNameSubCommandConfigureText" xml:space="preserve">
+    <value>更改隧道服务名称</value>
+  </data>
+  <data name="CustomTunnelServiceNameSelectionTitle" xml:space="preserve">
+    <value>隧道服务名称</value>
+  </data>
+  <data name="CustomTunnelServiceNameSelectionText" xml:space="preserve">
+    <value>自定义 WireGuard 隧道服务名称（默认为 wg_server）。仅允许字母、数字和下划线。</value>
+  </data>
+  <data name="TemporaryProfileDetected" xml:space="preserve">
+    <value>检测到临时配置文件</value>
+  </data>
+  <data name="TemporaryProfileDetectedText" xml:space="preserve">
+    <value>WS4W 检测到您可能正在使用临时 Windows 配置文件（例如 C:\Users\TEMP）运行。如果您的正常配置文件不可用或损坏，就会发生这种情况。在此会话中保存的任何配置可能会在删除临时配置文件时丢失。为避免丢失设置，请在继续之前考虑切换到永久用户配置文件。</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>不再显示</value>
+  </data>
+  <data name="PotentialPortConflict" xml:space="preserve">
+    <value>潜在端口冲突</value>
+  </data>
+  <data name="UDPPortConflictMessage" xml:space="preserve">
+    <value>另一个进程正在监听 UDP 端口 {0}，这可能会与 WireGuard 冲突。如果您继续，WS4W 可能无法安装隧道服务。您要继续吗？</value>
+  </data>
+  <data name="TCPPortConflictMessage" xml:space="preserve">
+    <value>另一个进程正在监听 TCP 端口 {0}。由于 WireGuard 使用 UDP，应该不会（但也可能）有冲突。您要继续吗？</value>
+  </data>
+  <!-- New Strings -->
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>筛选...</value>
+  </data>
+  <data name="ConfigurationFilesFilter" xml:space="preserve">
+    <value>配置文件 (*.conf)|*.conf</value>
+  </data>
+  <data name="LanguageSelection" xml:space="preserve">
+    <value>语言 / Language</value>
+  </data>
+  <data name="RestartRequiredTitle" xml:space="preserve">
+    <value>需要重启</value>
+  </data>
+  <data name="RestartRequiredText" xml:space="preserve">
+    <value>更改语言需要重启应用程序才能生效。您想要立即重启吗？</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>关于</value>
+  </data>
+</root>

@@ -4,6 +4,16 @@
 # Wg Server for Windows
 WS4W is a desktop application that allows running and managing a WireGuard server endpoint on Windows.
 
+[English](README.en.md) | [简体中文](README.zh-CN.md)
+
+> **New Feature**: Now supports **English / Chinese** bilingual switching! (With full Modern UI upgrade)
+
+# WS4W v2.2.0 - What's New
+* **Bilingual Support**: Seamlessly switch between English and Chinese (Simplified) from the new header bar.
+* **Modern UI**: Completely redesigned interface with a cleaner, more modern look and feel.
+* **Header Bar**: New persistent header for quick access to application title and language settings.
+* **Improved Styles**: Consistent fonts and styles across all windows and controls.
+
 Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](https://www.henrychang.ca/how-to-setup-wireguard-vpn-server-on-windows/), my goal was to create an application that automated and simplified many of the complex steps. While still not quite a plug-and-play solution, the idea is to be able to perform each of the prerequisite steps, one-by-one, without running any scripts, modifying the Registry, or entering the Control Panel.
 
 # Getting Started

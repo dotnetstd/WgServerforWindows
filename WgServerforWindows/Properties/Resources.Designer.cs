@@ -1548,6 +1548,69 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration Files (*.conf)|*.conf.
+        /// </summary>
+        public static string ConfigurationFilesFilter {
+            get {
+                return ResourceManager.GetString("ConfigurationFilesFilter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string LanguageSelection {
+            get {
+                return ResourceManager.GetString("LanguageSelection", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Required.
+        /// </summary>
+        public static string RestartRequiredTitle {
+            get {
+                return ResourceManager.GetString("RestartRequiredTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the language requires restarting the application to take effect. Do you want to restart now?.
+        /// </summary>
+        public static string RestartRequiredText {
+            get {
+                return ResourceManager.GetString("RestartRequiredText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Filter....
+        /// </summary>
+        public static string SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WS4W.
         /// </summary>
         public static string WS4W {

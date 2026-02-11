@@ -525,7 +525,13 @@ namespace WgServerforWindows.Models
             Name = nameof(Resources.ExportConfigurationFileAction),
             Action = (conf, prop) =>
             {
-                var saveFileDialog = new Microsoft.Win32.SaveFileDialog {FileName = $"{conf.NameProperty.Value}.conf", Filter = "Configuration Files (*.conf)|*.conf"};
+                // Save to file
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+                {
+                    FileName = $"{Name}.conf",
+                    Filter = WgServerforWindows.Properties.Resources.ConfigurationFilesFilter,
+                    InitialDirectory = ClientConfigurationsPrerequisite.ClientConfigDirectory
+                };
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     Configuration configuration = ToConfiguration<ClientConfiguration>();

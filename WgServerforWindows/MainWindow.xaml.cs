@@ -18,11 +18,26 @@ namespace WgServerforWindows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _isInitialized = false;
+
         public MainWindow()
         {
             AppSettings.Instance.Load();
 
             InitializeComponent();
+
+            // Initialize language selection
+            _isInitialized = false;
+            var currentLang = GlobalAppSettings.Instance.Language;
+            foreach (System.Windows.Controls.ComboBoxItem item in LanguageComboBox.Items)
+            {
+                if (item.Tag.ToString() == currentLang)
+                {
+                    LanguageComboBox.SelectedItem = item;
+                    break;
+                }
+            }
+            _isInitialized = true;
 
             // Never put quotes around config file values
             Configuration.OutputRawStringValues = true;
@@ -244,6 +259,33 @@ namespace WgServerforWindows
         {
             // Raise Fulfilled PropertyChanged on any prerequisite item. This will trigger the rest to update as well.
             (DataContext as MainWindowModel)?.PrerequisiteItems.FirstOrDefault()?.RaisePropertyChanged(nameof(PrerequisiteItem.Fulfilled));
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!_isInitialized) return;
+
+            if (LanguageComboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem)
+            {
+                string selectedLang = selectedItem.Tag.ToString();
+                if (selectedLang != GlobalAppSettings.Instance.Language)
+                {
+                    GlobalAppSettings.Instance.Language = selectedLang;
+                    GlobalAppSettings.Instance.Save();
+
+                    var result = MessageBox.Show(
+                        Properties.Resources.RestartRequiredText,
+                        Properties.Resources.RestartRequiredTitle,
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                        Application.Current.Shutdown();
+                    }
+                }
+            }
         }
     }
 }

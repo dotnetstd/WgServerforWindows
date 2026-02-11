@@ -2,12 +2,14 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.1.4.0</Version>
-  <ReleaseDate>2025-03-17</ReleaseDate>
+  <Version>2.2.0.0</Version>
+  <ReleaseDate>2026-02-11</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.4/WS4WSetup-2.1.4.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.1.4.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.2.0/WS4WSetup-2.2.0.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.2.0.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix issue where NAT boot task could fail (#139)</VersionNotes>
+  <VersionNotes> - Added English/Chinese bilingual support
+ - Major UI overhaul with Modern Design
+ - Fixed various bugs and improved stability</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

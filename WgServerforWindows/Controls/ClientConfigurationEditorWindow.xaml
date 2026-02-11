@@ -38,7 +38,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Grid.Row="0" Margin="10,10,5,10" Height="30" Content="{x:Static properties:Resources.AddClient}" Command="{Binding AddClientConfigurationCommand}"/>
-            <esb:ExplorerSearchBox Grid.Column="1" Margin="5,0,5,0" FocusManager.IsFocusScope="True" HintText="Filter" VerticalAlignment="Center" HorizontalAlignment="Stretch" SearchRequested="ExplorerSearchBox_SearchRequested" />
+            <esb:ExplorerSearchBox Grid.Column="1" Margin="5,0,5,0" FocusManager.IsFocusScope="True" HintText="{x:Static properties:Resources.SearchPlaceholder}" VerticalAlignment="Center" HorizontalAlignment="Stretch" SearchRequested="ExplorerSearchBox_SearchRequested" />
             <Button Grid.Column="2" Grid.Row="0" Margin="5,10,5,10" Content="+" FontSize="15" ToolTip="{x:Static properties:Resources.ExpandAll}" Command="{Binding ExpandAllConfigurationsCommand}"/>
             <Button Grid.Column="3" Grid.Row="0" Margin="5,10,5,10" Content="-" FontSize="15" ToolTip="{x:Static properties:Resources.CollapseAll}" Command="{Binding CollapseAllConfigurationsCommand}"/>
         </Grid>
