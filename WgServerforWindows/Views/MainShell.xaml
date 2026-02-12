@@ -20,8 +20,11 @@
         <!-- Sidebar -->
         <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" BorderThickness="0,0,1,0" BorderBrush="{StaticResource BorderBrush}">
             <StackPanel Margin="10">
-                <!-- App Title -->
-                <TextBlock Text="{x:Static properties:Resources.WS4W}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="10,20,0,30"/>
+                <!-- App Title and Version -->
+                <StackPanel Orientation="Horizontal" Margin="10,20,0,30">
+                    <TextBlock Text="{x:Static properties:Resources.WS4W}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                    <TextBlock Text="{Binding AppVersion}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Bottom" Margin="5,0,0,5"/>
+                </StackPanel>
 
                 <!-- Navigation Buttons -->
                 <RadioButton Content="{x:Static properties:Resources.Dashboard}" Style="{StaticResource ModernNavigationButtonStyle}" Margin="0,5" Command="{Binding NavigateCommand}" CommandParameter="Dashboard" IsChecked="True"/>

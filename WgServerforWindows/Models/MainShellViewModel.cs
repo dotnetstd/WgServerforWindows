@@ -23,6 +23,8 @@ namespace WgServerforWindows.Models
 
         private readonly IToastService _toastService;
 
+        public string AppVersion => $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
+
         public MainShellViewModel(IToastService toastService)
         {
             _toastService = toastService;
