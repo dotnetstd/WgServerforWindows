@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -6,11 +6,15 @@ using Microsoft.Win32.TaskScheduler;
 using WgServerforWindows.Cli.Options;
 using WgServerforWindows.Properties;
 
+using WgServerforWindows.Services.Interfaces;
+
 namespace WgServerforWindows.Models
 {
     public class PrivateNetworkTaskSubCommand : PrerequisiteItem
     {
-        public PrivateNetworkTaskSubCommand() : base
+        private readonly INetworkService _networkService;
+
+        public PrivateNetworkTaskSubCommand(INetworkService networkService) : base
         (
             string.Empty,
             successMessage: Resources.PrivateNetworkTaskSubCommandSuccessMessage,
@@ -19,17 +23,14 @@ namespace WgServerforWindows.Models
             configureText: Resources.PrivateNetworkTaskSubCommandConfigureText
         )
         {
+            _networkService = networkService;
         }
 
         #region PrerequisiteItem members
 
         /// <inheritdoc/>
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
-            TaskService.Instance.FindTask(_privateNetworkTaskUniqueName) is { Enabled: true } task
-            && task.Definition.Triggers.FirstOrDefault() is BootTrigger
-            && task.Definition.Actions.FirstOrDefault() is ExecAction action
-            && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe")
-            && action.Arguments.StartsWith(typeof(PrivateNetworkCommand).GetVerb()));
+            _networkService.IsTaskEnabled(_privateNetworkTaskUniqueName, Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(PrivateNetworkCommand).GetVerb()));
         private BooleanTimeCachedProperty _fulfilled;
 
         /// <inheritdoc/>
@@ -37,11 +38,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            // Create/update a Scheduled Task that sets the Private network category on boot.
-            TaskDefinition td = TaskService.Instance.NewTask();
-            td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(PrivateNetworkCommand).GetVerb()));
-            td.Triggers.Add(new BootTrigger { Delay = GlobalAppSettings.Instance.BootTaskDelay });
-            TaskService.Instance.RootFolder.RegisterTaskDefinition(_privateNetworkTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+            _networkService.CreateBootTask(_privateNetworkTaskUniqueName, Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(PrivateNetworkCommand).GetVerb(), GlobalAppSettings.Instance.BootTaskDelay);
 
             Refresh();
 
@@ -52,11 +49,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            // Disable the task
-            if (TaskService.Instance.FindTask(_privateNetworkTaskUniqueName) is { } task)
-            {
-                task.Enabled = false;
-            }
+            _networkService.DisableTask(_privateNetworkTaskUniqueName);
 
             Refresh();
 

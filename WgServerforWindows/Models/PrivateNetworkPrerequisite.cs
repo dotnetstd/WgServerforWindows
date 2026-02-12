@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Net;
 using WgServerforWindows.Properties;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
@@ -9,9 +10,11 @@ namespace WgServerforWindows.Models
     {
         #region PrerequisiteItem members
 
-        public PrivateNetworkPrerequisite() : this(new PrivateNetworkTaskSubCommand()) { }
+        private readonly INetworkService _networkService;
+
+        public PrivateNetworkPrerequisite(INetworkService networkService) : this(networkService, new PrivateNetworkTaskSubCommand(networkService)) { }
         
-        public PrivateNetworkPrerequisite(PrivateNetworkTaskSubCommand privateNetworkTaskSubCommand) : base
+        public PrivateNetworkPrerequisite(INetworkService networkService, PrivateNetworkTaskSubCommand privateNetworkTaskSubCommand) : base
         (
             title: Resources.PrivateNetworkTitle,
             successMessage: Resources.PrivateNetworkSuccess,
@@ -20,6 +23,7 @@ namespace WgServerforWindows.Models
             configureText: Resources.PrivateNetworkConfigure
         )
         {
+            _networkService = networkService;
             _privateNetworkTaskSubCommand = privateNetworkTaskSubCommand;
             SubCommands.Add(_privateNetworkTaskSubCommand);
         }
@@ -29,13 +33,15 @@ namespace WgServerforWindows.Models
             bool result = false;
 
             // Check whether the Tunnel service is installed. This will inform whether we should wait a long time to find the network or not
-            var tun = new TunnelServicePrerequisite().Fulfilled;
+            var tun = _networkService.IsTunnelServiceInstalled(GlobalAppSettings.Instance.TunnelServiceName);
             TimeSpan timeout = TimeSpan.FromSeconds(tun ? 10 : 0);
 
-            if (ServerConfigurationPrerequisite.GetNetwork(timeout: timeout) is { } network)
+            int category = _networkService.GetNetworkCategory(GlobalAppSettings.Instance.TunnelServiceName, timeout);
+            if (category != -1)
             {
+                NetworkCategory networkCategory = (NetworkCategory)category;
                 // Special case: computer is on a domain, so Authenticated is sufficient and shouldn't be changed
-                if (network.Category == NetworkCategory.Authenticated)
+                if (networkCategory == NetworkCategory.Authenticated)
                 {
                     SuccessMessage = Resources.WireGuardNetworkOnDomain;
                     _isInformational = true;
@@ -50,7 +56,7 @@ namespace WgServerforWindows.Models
                 RaisePropertyChanged(nameof(CanResolve));
 
                 // Normal case: We want the network to be private
-                result = network.Category == NetworkCategory.Private;
+                result = networkCategory == NetworkCategory.Private;
             }
 
             return result;
@@ -61,10 +67,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
-            {
-                network.Category = NetworkCategory.Private;
-            }
+            _networkService.SetNetworkCategory(GlobalAppSettings.Instance.TunnelServiceName, (int)NetworkCategory.Private);
 
             _privateNetworkTaskSubCommand.Resolve();
 
@@ -77,24 +80,21 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-
-            if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
+            try
             {
-                try
+                _networkService.SetNetworkCategory(GlobalAppSettings.Instance.TunnelServiceName, (int)NetworkCategory.Public);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // If it failed, maybe we're on a domain?
+                int category = _networkService.GetNetworkCategory(GlobalAppSettings.Instance.TunnelServiceName);
+                if (category != -1 && (NetworkCategory)category == NetworkCategory.Authenticated)
                 {
-                    network.Category = NetworkCategory.Public;
+                    // Just keep going. Refresh() will raise Fulfilled, which will check the category agian
                 }
-                catch (UnauthorizedAccessException)
+                else // Failed for some other reason. Let it fail.
                 {
-                    // If it failed, maybe we're on a domain?
-                    if (network.Category == NetworkCategory.Authenticated)
-                    {
-                        // Just keep going. Refresh() will raise Fulfilled, which will check the category agian
-                    }
-                    else // Failed for some other reason. Let it fail.
-                    {
-                        throw;
-                    }
+                    throw;
                 }
             }
 

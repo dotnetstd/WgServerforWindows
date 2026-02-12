@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -6,11 +6,15 @@ using Microsoft.Win32.TaskScheduler;
 using WgServerforWindows.Cli.Options;
 using WgServerforWindows.Properties;
 
+using WgServerforWindows.Services.Interfaces;
+
 namespace WgServerforWindows.Models
 {
     public class NewNetIpAddressTaskSubCommand : PrerequisiteItem
     {
-        public NewNetIpAddressTaskSubCommand() : base
+        private readonly INetworkService _networkService;
+
+        public NewNetIpAddressTaskSubCommand(INetworkService networkService) : base
         (
             string.Empty,
             successMessage: Resources.NewNetIpAddressTaskSubCommandSuccessMessage,
@@ -19,17 +23,14 @@ namespace WgServerforWindows.Models
             configureText: Resources.NewNetIpAddressTaskSubCommandConfigureText
         )
         {
+            _networkService = networkService;
         }
 
         #region PrerequisiteItem members
 
         /// <inheritdoc/>
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
-            TaskService.Instance.FindTask(_netIpAddressTaskUniqueName) is { Enabled: true } task
-            && task.Definition.Triggers.FirstOrDefault() is BootTrigger
-            && task.Definition.Actions.FirstOrDefault() is ExecAction action
-            && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe")
-            && action.Arguments.StartsWith(typeof(SetNetIpAddressCommand).GetVerb()));
+            _networkService.IsTaskEnabled(_netIpAddressTaskUniqueName, Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(SetNetIpAddressCommand).GetVerb()));
         private BooleanTimeCachedProperty _fulfilled;
 
         /// <inheritdoc/>
@@ -42,11 +43,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            // Create/update a Scheduled Task that sets the NetIPAddress on boot.
-            TaskDefinition td = TaskService.Instance.NewTask();
-            td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} \"{serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}\""));
-            td.Triggers.Add(new BootTrigger { Delay = GlobalAppSettings.Instance.BootTaskDelay + TimeSpan.FromSeconds(15) });
-            TaskService.Instance.RootFolder.RegisterTaskDefinition(_netIpAddressTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+            _networkService.CreateBootTask(_netIpAddressTaskUniqueName, Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} \"{serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}\"", GlobalAppSettings.Instance.BootTaskDelay + TimeSpan.FromSeconds(15));
 
             Refresh();
 
@@ -57,11 +54,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            // Disable the task
-            if (TaskService.Instance.FindTask(_netIpAddressTaskUniqueName) is { } task)
-            {
-                task.Enabled = false;
-            }
+            _networkService.DisableTask(_netIpAddressTaskUniqueName);
 
             Refresh();
 

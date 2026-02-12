@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,6 +9,8 @@ using Bluegrams.Application.WPF;
 using SharpConfig;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Models;
+using WgServerforWindows.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using SplashScreen = WgServerforWindows.Controls.SplashScreen;
 
 namespace WgServerforWindows
@@ -20,7 +22,7 @@ namespace WgServerforWindows
     {
         private bool _isInitialized = false;
 
-        public MainWindow()
+        public MainWindow(MainWindowModel mainWindowModel)
         {
             AppSettings.Instance.Load();
 
@@ -42,23 +44,24 @@ namespace WgServerforWindows
             // Never put quotes around config file values
             Configuration.OutputRawStringValues = true;
 
-            var wireGuardExePrerequisite = new WireGuardExePrerequisite();
+            var networkService = App.Current.Services.GetService<INetworkService>();
+            var wireGuardExePrerequisite = new WireGuardExePrerequisite(networkService);
             var openServerConfigDirectorySubCommand = new OpenServerConfigDirectorySubCommand();
             var changeServerConfigDirectorySubCommand = new ChangeServerConfigDirectorySubCommand();
-            var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(openServerConfigDirectorySubCommand, changeServerConfigDirectorySubCommand);
+            var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(networkService, openServerConfigDirectorySubCommand, changeServerConfigDirectorySubCommand);
             var openClientConfigDirectorySubCommand = new OpenClientConfigDirectorySubCommand();
             var changeClientConfigDirectorySubCommand = new ChangeClientConfigDirectorySubCommand();
-            var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
+            var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(networkService, openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
             var tunnelServiceNameSubCommand = new TunnelServiceNameSubCommand();
-            var tunnelServicePrerequisite = new TunnelServicePrerequisite(tunnelServiceNameSubCommand);
-            var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand();
-            var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(privateNetworkTaskSubCommand);
-            var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
+            var tunnelServicePrerequisite = new TunnelServicePrerequisite(networkService, tunnelServiceNameSubCommand);
+            var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand(networkService);
+            var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(networkService, privateNetworkTaskSubCommand);
+            var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand(networkService);
             var netNatRangeSubCommand = new NetNatRangeSubCommand();
-            var newNetNatPrerequisite = new NewNetNatPrerequisite(netIpAddressTaskSubCommand, netNatRangeSubCommand);
-            var internetSharingPrerequisite = new InternetSharingPrerequisite();
-            var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite();
-            var serverStatusPrerequisite = new ServerStatusPrerequisite();
+            var newNetNatPrerequisite = new NewNetNatPrerequisite(networkService, netIpAddressTaskSubCommand, netNatRangeSubCommand);
+            var internetSharingPrerequisite = new InternetSharingPrerequisite(networkService);
+            var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite(networkService);
+            var serverStatusPrerequisite = new ServerStatusPrerequisite(networkService);
             var bootTaskDelaySubCommand = new BootTaskDelaySubCommand();
             var settingsPrerequisite = new SettingsPrerequisite(bootTaskDelaySubCommand);
 
@@ -102,7 +105,6 @@ namespace WgServerforWindows
             openClientConfigDirectorySubCommand.CanConfigureFunc = () => Directory.Exists(ClientConfigurationsPrerequisite.ClientConfigDirectory);
 
             // Add the prereqs to the Model
-            MainWindowModel mainWindowModel = new MainWindowModel();
             mainWindowModel.PrerequisiteItems.Add(wireGuardExePrerequisite);
             mainWindowModel.PrerequisiteItems.Add(serverConfigurationPrerequisite);
             mainWindowModel.PrerequisiteItems.Add(clientConfigurationsPrerequisite);

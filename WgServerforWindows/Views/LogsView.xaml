@@ -1,0 +1,43 @@
+<UserControl x:Class="WgServerforWindows.Views.LogsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:properties="clr-namespace:WgServerforWindows.Properties"
+             xmlns:local="clr-namespace:WgServerforWindows.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Static properties:Resources.SystemLogs}" Style="{StaticResource HeaderTextStyle}" Margin="0,0,0,20"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                    <CheckBox Content="{x:Static properties:Resources.AutoRefresh}" 
+                              IsChecked="{Binding IsAutoRefreshEnabled}" 
+                              VerticalAlignment="Center" 
+                              Margin="0,0,10,0"/>
+                    <Button Content="{x:Static properties:Resources.Refresh}" 
+                            Command="{Binding RefreshLogsCommand}" 
+                            Style="{StaticResource ModernButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <Border Style="{StaticResource ModernCardStyle}" Padding="0">
+                <TextBox Text="{Binding LogContent}" 
+                         IsReadOnly="True" 
+                         VerticalScrollBarVisibility="Auto" 
+                         HorizontalScrollBarVisibility="Auto"
+                         Height="500"
+                         FontFamily="Consolas, Courier New, Monospace"
+                         FontSize="12"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="10"/>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -101,7 +101,11 @@ ipch/
 
 # Trae
 .trae/
+trae.config.*
 build_output.txt
+build_log.txt
+build_out.txt
+build_utf8.txt
 *.aps
 *.ncb
 *.opendb

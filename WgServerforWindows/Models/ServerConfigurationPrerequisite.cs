@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,18 +12,22 @@ using WgAPI.Commands;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Extensions;
 using WgServerforWindows.Properties;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
     public class ServerConfigurationPrerequisite : PrerequisiteItem
     {
+        private readonly INetworkService _networkService;
+
         #region Constructor
 
-        public ServerConfigurationPrerequisite() : this(new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand())
+        public ServerConfigurationPrerequisite(INetworkService networkService) : this(networkService, new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand())
         {
         }
 
         public ServerConfigurationPrerequisite(
+            INetworkService networkService,
             OpenServerConfigDirectorySubCommand openServerConfigDirectorySubCommand, 
             ChangeServerConfigDirectorySubCommand changeServerConfigDirectorySubCommand) : base
         (
@@ -34,6 +38,7 @@ namespace WgServerforWindows.Models
             configureText: Resources.ServerConfigurationConfigureText
         )
         {
+            _networkService = networkService;
             SubCommands.Add(openServerConfigDirectorySubCommand);
             SubCommands.Add(changeServerConfigDirectorySubCommand);
         }
@@ -64,7 +69,7 @@ namespace WgServerforWindows.Models
             }
 
             // Check whether the registry got updated correctly.
-            if (!GetScopeAddressRegistryValue().Equals(serverConfiguration.IpAddress))
+            if (!_networkService.GetScopeAddress().Equals(serverConfiguration.IpAddress))
             {
                 ErrorMessage = Resources.ScopeAddressRegistryIncorrect;
                 return false;
@@ -101,19 +106,19 @@ namespace WgServerforWindows.Models
                 SaveWG(serverConfiguration);
 
                 // Update clients
-                var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
+                var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(_networkService);
                 clientConfigurationsPrerequisite.Update();
 
                 // Update Internet Sharing to use new server IP only if
                 // - the new value passes validation
                 // - the new value is not already in the registry
                 if (string.IsNullOrEmpty(serverConfiguration.AddressProperty.Validation?.Validate?.Invoke(serverConfiguration.AddressProperty))
-                    && !GetScopeAddressRegistryValue().Equals(serverConfiguration.IpAddress))
+                    && !_networkService.GetScopeAddress().Equals(serverConfiguration.IpAddress))
                 {
-                    SetScopeAddressRegistryValue(serverConfiguration.IpAddress);
+                    _networkService.SetScopeAddress(serverConfiguration.IpAddress);
 
                     // If Internet Sharing is already enabled, and we just changed the server's network range, we should disable and re-enable ICS
-                    var ics = new InternetSharingPrerequisite();
+                    var ics = new InternetSharingPrerequisite(_networkService);
                     if (ics.Fulfilled)
                     {
                         ics.Configure();
@@ -122,14 +127,16 @@ namespace WgServerforWindows.Models
                 }
 
                 // Update the tunnel service, if everyone is happy
-                if (Fulfilled && (clientConfigurationsPrerequisite.Fulfilled || !ClientConfigurationsPrerequisite.AnyClients) && new TunnelServicePrerequisite().Fulfilled)
+                if (Fulfilled && (clientConfigurationsPrerequisite.Fulfilled || !ClientConfigurationsPrerequisite.AnyClients) && new TunnelServicePrerequisite(_networkService).Fulfilled)
                 {
                     using (TemporaryFile temporaryFile = new(ServerWGPath, ServerWGPathWithCustomTunnelName))
                     {
-                        // Sync conf to tunnel
-                        string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath), out int exitCode);
-
-                        if (exitCode != 0)
+                        try
+                        {
+                            // Sync conf to tunnel
+                            _networkService.SyncConfiguration(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath);
+                        }
+                        catch (Exception ex)
                         {
                             // Notify the user that there was an error syncing the server conf.
                             WaitCursor.SetOverrideCursor(null);
@@ -139,8 +146,8 @@ namespace WgServerforWindows.Models
                                 DataContext = new UnhandledErrorWindowModel
                                 {
                                     Title = Resources.Error,
-                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
-                                    Exception = new Exception(output)
+                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{ex.Message}",
+                                    Exception = ex
                                 }
                             }.ShowDialog();
                         }
@@ -262,22 +269,6 @@ namespace WgServerforWindows.Models
             stopwatch.Stop();
 
             return result;
-        }
-
-        #endregion
-
-        #region Private static methods
-
-        private static void SetScopeAddressRegistryValue(string value)
-        {
-            var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters", writable: true);
-            key?.SetValue("ScopeAddress", value);
-        }
-
-        private static string GetScopeAddressRegistryValue()
-        {
-            var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters", writable: false);
-            return key?.GetValue("ScopeAddress")?.ToString();
         }
 
         #endregion

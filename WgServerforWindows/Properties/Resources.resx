@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -297,6 +297,24 @@ Current value: {1}</value>
   </data>
   <data name="DnsSearchDomainsProperty" xml:space="preserve">
     <value>DNS Search Domains</value>
+  </data>
+  <data name="Automation" xml:space="preserve">
+    <value>Automation</value>
+  </data>
+  <data name="EnableDynamicIpSync" xml:space="preserve">
+    <value>Enable Dynamic IPv6 Endpoint Sync</value>
+  </data>
+  <data name="DynamicIpSyncDescription" xml:space="preserve">
+    <value>Automatically updates the server's endpoint address when the public IPv6 changes.</value>
+  </data>
+  <data name="SystemLogs" xml:space="preserve">
+    <value>System Logs</value>
+  </data>
+  <data name="AutoRefresh" xml:space="preserve">
+    <value>Auto Refresh</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
   </data>
   <data name="DnsSearchDomainsPropertyDescription" xml:space="preserve">
     <value>Also known as DNS Suffixes</value>
@@ -647,7 +665,73 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="PublicIpIpv6" xml:space="preserve">
+    <value>Public IP (IPv6)</value>
+  </data>
+  <data name="MtuOptimizationWizard" xml:space="preserve">
+    <value>MTU Optimization Wizard</value>
+  </data>
+  <data name="MtuWizardDescription" xml:space="preserve">
+    <value>This wizard will help you find the optimal MTU for your network connection to avoid fragmentation.</value>
+  </data>
+  <data name="TargetHost" xml:space="preserve">
+    <value>Target Host:</value>
+  </data>
+  <data name="StartEstimation" xml:space="preserve">
+    <value>Start Estimation</value>
+  </data>
+  <data name="EstimationComplete" xml:space="preserve">
+    <value>Estimation Complete</value>
+  </data>
+  <data name="OptimalPhysicalMtu" xml:space="preserve">
+    <value>Optimal Physical MTU: {0} bytes</value>
+  </data>
+  <data name="MtuNote" xml:space="preserve">
+    <value>Note: WireGuard MTU should be at least 60-80 bytes smaller than this.</value>
+  </data>
+  <data name="ApplyToConfiguration" xml:space="preserve">
+    <value>Apply to Configuration</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>About</value>
+  </data>
+  <data name="MtuDescription" xml:space="preserve">
+    <value>The Maximum Transmission Unit (MTU) for the WireGuard interface.</value>
+  </data>
+  <data name="MtuRangeValidationError" xml:space="preserve">
+    <value>MTU must be between 576 and 65535.</value>
+  </data>
+  <data name="MtuValidationError" xml:space="preserve">
+    <value>MTU must be a valid integer.</value>
+  </data>
+  <data name="NetworkStatus" xml:space="preserve">
+    <value>Network Status</value>
+  </data>
+  <data name="TrafficActivity" xml:space="preserve">
+    <value>Traffic Activity</value>
+  </data>
+  <data name="DownloadRate" xml:space="preserve">
+    <value>Download Rate</value>
+  </data>
+  <data name="UploadRate" xml:space="preserve">
+    <value>Upload Rate</value>
+  </data>
+  <data name="MtuOptimizer" xml:space="preserve">
+    <value>MTU Optimizer</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="TunnelsConfiguration" xml:space="preserve">
+    <value>Tunnels Configuration</value>
+  </data>
+  <data name="Tunnels" xml:space="preserve">
+    <value>Tunnels</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>Logs</value>
   </data>
 </root>

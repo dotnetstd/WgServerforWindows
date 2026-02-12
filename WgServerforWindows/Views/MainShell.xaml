@@ -1,0 +1,62 @@
+<Window x:Class="WgServerforWindows.Views.MainShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WgServerforWindows.Views"
+        xmlns:controls="clr-namespace:WgServerforWindows.Controls"
+        xmlns:properties="clr-namespace:WgServerforWindows.Properties"
+        mc:Ignorable="d"
+        Title="{x:Static properties:Resources.WS4W}" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="{StaticResource CardBackgroundBrush}" BorderThickness="0,0,1,0" BorderBrush="{StaticResource BorderBrush}">
+            <StackPanel Margin="10">
+                <!-- App Title -->
+                <TextBlock Text="{x:Static properties:Resources.WS4W}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}" Margin="10,20,0,30"/>
+
+                <!-- Navigation Buttons -->
+                <RadioButton Content="{x:Static properties:Resources.Dashboard}" Style="{StaticResource ModernNavigationButtonStyle}" Margin="0,5" Command="{Binding NavigateCommand}" CommandParameter="Dashboard" IsChecked="True"/>
+                <RadioButton Content="{x:Static properties:Resources.Tunnels}" Style="{StaticResource ModernNavigationButtonStyle}" Margin="0,5" Command="{Binding NavigateCommand}" CommandParameter="Tunnels"/>
+                <RadioButton Content="{x:Static properties:Resources.Logs}" Style="{StaticResource ModernNavigationButtonStyle}" Margin="0,5" Command="{Binding NavigateCommand}" CommandParameter="Logs"/>
+                <RadioButton Content="{x:Static properties:Resources.Settings}" Style="{StaticResource ModernNavigationButtonStyle}" Margin="0,5" Command="{Binding NavigateCommand}" CommandParameter="Settings"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Border Grid.Column="1" Padding="20">
+            <Grid>
+                <ContentControl Content="{Binding CurrentView}"/>
+                
+                <!-- Loading Overlay -->
+                <Grid Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#80FFFFFF">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Loading..." FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Toast Overlay -->
+        <ItemsControl Grid.Column="1" ItemsSource="{Binding Toasts}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel VerticalAlignment="Bottom"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:ToastControl />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>

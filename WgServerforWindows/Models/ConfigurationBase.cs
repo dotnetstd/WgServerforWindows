@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +32,25 @@ namespace WgServerforWindows.Models
                 .Select(p => p.GetValue(this) as ConfigurationPropertyAction))
             {
                 TopLevelActions.Add(action);
+            }
+        }
+
+        public T Load<T>(Configuration configuration) where T : ConfigurationBase
+        {
+            return (T)Load(configuration);
+        }
+
+        public void Save(Configuration configuration)
+        {
+            var interfaceConfig = ToConfiguration();
+            var section = configuration["Interface"];
+            var newSection = interfaceConfig["Interface"];
+            
+            // Clear existing settings in Interface section and copy new ones
+            section.Clear();
+            foreach (var setting in newSection)
+            {
+                section[setting.Name].RawValue = setting.RawValue;
             }
         }
 

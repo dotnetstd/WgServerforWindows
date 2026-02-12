@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -23,25 +23,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="NETCONLib.dll">
+    <!-- <COMReference Include="NETCONLib.dll">
       <VersionMinor>0</VersionMinor>
       <VersionMajor>1</VersionMajor>
       <Guid>43e734ca-043d-4a70-9a2c-a8f254063d91</Guid>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>false</Isolated>
-    </COMReference>
+    </COMReference> -->
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AppHelpers.WPF" Version="0.1.1" />
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
     <PackageReference Include="Flurl.Http" Version="4.0.2" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="IPNetwork2" Version="3.0.667" />
       <PackageReference Include="Jot" Version="2.1.17" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
     <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
     <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />

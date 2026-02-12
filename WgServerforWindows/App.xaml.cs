@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,9 +9,13 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CommandLine;
+using Microsoft.Extensions.DependencyInjection;
 using WgServerforWindows.Cli.Options;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Models;
+using WgServerforWindows.Views;
+using WgServerforWindows.Services.Interfaces;
+using WgServerforWindows.Services;
 using SplashScreen = WgServerforWindows.Controls.SplashScreen;
 
 namespace WgServerforWindows
@@ -21,9 +25,43 @@ namespace WgServerforWindows
     /// </summary>
     public partial class App : Application
     {
+        public IServiceProvider Services { get; private set; }
+
+        public new static App Current => (App)Application.Current;
+
         public App()
         {
+            Services = ConfigureServices();
             DispatcherUnhandledException += Application_DispatcherUnhandledException;
+        }
+
+        private static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            // ViewModels
+            services.AddSingleton<MainWindowModel>();
+            services.AddSingleton<MainShellViewModel>();
+            services.AddSingleton<DashboardViewModel>();
+            services.AddTransient<LogsViewModel>();
+            services.AddTransient<MtuWizardViewModel>();
+
+            // Views
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainShell>();
+            services.AddSingleton<DashboardView>();
+            services.AddSingleton<TunnelsView>();
+            services.AddSingleton<LogsView>();
+            services.AddSingleton<SettingsView>();
+            services.AddTransient<MtuWizardWindow>();
+
+            // Register Services
+            services.AddSingleton<IToastService, ToastService>();
+            services.AddSingleton<IDynamicEndpointService, DynamicEndpointService>();
+            services.AddSingleton<ILogService, LogService>();
+            services.AddSingleton<INetworkService, NetworkService>();
+
+            return services.BuildServiceProvider();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -93,13 +131,14 @@ namespace WgServerforWindows
                 }
 
                 // Finally, do a normal startup.
-                new SplashScreen().Show();
+                App.Current.Services.GetService<MainShell>().Show();
             }
         }
 
         private static void RestartInternetSharing(RestartInternetSharingCommand o)
         {
-            var internetSharingPrerequisite = new InternetSharingPrerequisite();
+            var networkService = App.Current.Services.GetService<INetworkService>();
+            var internetSharingPrerequisite = new InternetSharingPrerequisite(networkService);
             string networkToShare = o.NetworkToShare;
 
             if (string.IsNullOrEmpty(networkToShare))
@@ -169,13 +208,15 @@ namespace WgServerforWindows
         public static void SetNetIpAddress(SetNetIpAddressCommand o)
         {
             Thread.Sleep(TimeSpan.FromSeconds(10));
-            new NewNetNatPrerequisite().Resolve(o.ServerDataPath);
+            var networkService = App.Current.Services.GetService<INetworkService>();
+            new NewNetNatPrerequisite(networkService).Resolve(o.ServerDataPath);
         }
 
         public static void PrivateNetwork(PrivateNetworkCommand o)
         {
             Thread.Sleep(TimeSpan.FromSeconds(10));
-            new PrivateNetworkPrerequisite().Resolve();
+            var networkService = App.Current.Services.GetService<INetworkService>();
+            new PrivateNetworkPrerequisite(networkService).Resolve();
         }
 
         public static void Status(StatusCommand o)
@@ -201,7 +242,8 @@ namespace WgServerforWindows
             }
 
             // Otherwise, show the status window.
-            new ServerStatusPrerequisite().Show();
+            var networkService = App.Current.Services.GetService<INetworkService>();
+            new ServerStatusPrerequisite(networkService).Show();
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

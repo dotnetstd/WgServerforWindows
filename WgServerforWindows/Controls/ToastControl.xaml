@@ -1,0 +1,57 @@
+<UserControl x:Class="WgServerforWindows.Controls.ToastControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:models="clr-namespace:WgServerforWindows.Models"
+             xmlns:interfaces="clr-namespace:WgServerforWindows.Services.Interfaces"
+             xmlns:converters="clr-namespace:WgServerforWindows.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
+        <Style TargetType="Border" x:Key="ToastBorderStyle">
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="{x:Static interfaces:ToastType.Info}">
+                    <Setter Property="Background" Value="#2196F3"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="{x:Static interfaces:ToastType.Success}">
+                    <Setter Property="Background" Value="#4CAF50"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="{x:Static interfaces:ToastType.Warning}">
+                    <Setter Property="Background" Value="#FF9800"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="{x:Static interfaces:ToastType.Error}">
+                    <Setter Property="Background" Value="#F44336"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource ToastBorderStyle}" Margin="0,5" Padding="15,10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="{Binding Title}" 
+                       Foreground="White" 
+                       FontWeight="Bold" 
+                       FontSize="14" 
+                       Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}"/>
+            
+            <TextBlock Grid.Row="1" 
+                       Text="{Binding Message}" 
+                       Foreground="White" 
+                       FontSize="13" 
+                       TextWrapping="Wrap"/>
+        </Grid>
+    </Border>
+</UserControl>

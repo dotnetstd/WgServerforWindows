@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,18 +9,22 @@ using WgAPI.Commands;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Extensions;
 using WgServerforWindows.Properties;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
     public class ClientConfigurationsPrerequisite : PrerequisiteItem
     {
+        private readonly INetworkService _networkService;
+
         #region Constructor
 
-        public ClientConfigurationsPrerequisite() : this(new OpenClientConfigDirectorySubCommand(), new ChangeClientConfigDirectorySubCommand())
+        public ClientConfigurationsPrerequisite(INetworkService networkService) : this(networkService, new OpenClientConfigDirectorySubCommand(), new ChangeClientConfigDirectorySubCommand())
         {
         }
 
         public ClientConfigurationsPrerequisite(
+            INetworkService networkService,
             OpenClientConfigDirectorySubCommand openClientConfigDirectorySubCommand,
             ChangeClientConfigDirectorySubCommand changeClientConfigDirectorySubCommand) : base
         (
@@ -31,6 +35,7 @@ namespace WgServerforWindows.Models
             configureText: Resources.ClientConfigurationsResolveText
         )
         {
+            _networkService = networkService;
             SubCommands.Add(openClientConfigDirectorySubCommand);
             SubCommands.Add(changeClientConfigDirectorySubCommand);
         }
@@ -164,17 +169,19 @@ namespace WgServerforWindows.Models
                 }
 
                 // Update server
-                var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite();
+                var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(_networkService);
                 serverConfigurationPrerequisite.Update();
 
                 // Update the tunnel service, if everyone is happy
-                if ((Fulfilled || !AnyClients) && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
+                if ((Fulfilled || !AnyClients) && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite(_networkService).Fulfilled)
                 {
                     using (TemporaryFile temporaryFile = new(originalFilePath: ServerConfigurationPrerequisite.ServerWGPath, newFilePath: ServerConfigurationPrerequisite.ServerWGPathWithCustomTunnelName))
                     {
-                        string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath), out int exitCode);
-
-                        if (exitCode != 0)
+                        try
+                        {
+                            _networkService.SyncConfiguration(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath);
+                        }
+                        catch (Exception ex)
                         {
                             // Notify the user that there was an error syncing the server conf.
                             WaitCursor.SetOverrideCursor(null);
@@ -184,8 +191,8 @@ namespace WgServerforWindows.Models
                                 DataContext = new UnhandledErrorWindowModel
                                 {
                                     Title = Resources.Error,
-                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
-                                    Exception = new Exception(output)
+                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{ex.Message}",
+                                    Exception = ex
                                 }
                             }.ShowDialog();
                         }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="WgServerforWindows.Controls.SplashScreen"
+<Window x:Class="WgServerforWindows.Controls.SplashScreen"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="SplashScreen" Height="200" Width="400"
         WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#323232" ResizeMode="NoResize"
-        Loaded="Window_Loaded" Name="This">
+        Loaded="Window_Loaded" Name="This"
+        Topmost="True" ShowInTaskbar="False">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".05*"/>

@@ -559,6 +559,60 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automation.
+        /// </summary>
+        public static string Automation {
+            get {
+                return ResourceManager.GetString("Automation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic IPv6 Endpoint Sync.
+        /// </summary>
+        public static string EnableDynamicIpSync {
+            get {
+                return ResourceManager.GetString("EnableDynamicIpSync", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to System Logs.
+        /// </summary>
+        public static string SystemLogs {
+            get {
+                return ResourceManager.GetString("SystemLogs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Refresh.
+        /// </summary>
+        public static string AutoRefresh {
+            get {
+                return ResourceManager.GetString("AutoRefresh", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically updates the server's endpoint address when the public IPv6 changes.
+        /// </summary>
+        public static string DynamicIpSyncDescription {
+            get {
+                return ResourceManager.GetString("DynamicIpSyncDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Generate an IP in the range defined by the server address (currently: {0}).
         /// </summary>
         public static string GenerateClientAddressActionDescription {
@@ -1616,6 +1670,202 @@ namespace WgServerforWindows.Properties {
         public static string WS4W {
             get {
                 return ResourceManager.GetString("WS4W", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to MTU.
+        /// </summary>
+        public static string MtuDescription {
+            get {
+                return ResourceManager.GetString("MtuDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MTU must be between 576 and 65535.
+        /// </summary>
+        public static string MtuRangeValidationError {
+            get {
+                return ResourceManager.GetString("MtuRangeValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MTU must be a valid integer.
+        /// </summary>
+        public static string MtuValidationError {
+            get {
+                return ResourceManager.GetString("MtuValidationError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Network Status.
+        /// </summary>
+        public static string NetworkStatus {
+            get {
+                return ResourceManager.GetString("NetworkStatus", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Traffic Activity.
+        /// </summary>
+        public static string TrafficActivity {
+            get {
+                return ResourceManager.GetString("TrafficActivity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download Rate.
+        /// </summary>
+        public static string DownloadRate {
+            get {
+                return ResourceManager.GetString("DownloadRate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Upload Rate.
+        /// </summary>
+        public static string UploadRate {
+            get {
+                return ResourceManager.GetString("UploadRate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MTU Optimizer.
+        /// </summary>
+        public static string MtuOptimizer {
+            get {
+                return ResourceManager.GetString("MtuOptimizer", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string Dashboard {
+            get {
+                return ResourceManager.GetString("Dashboard", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Public IP (IPv6).
+        /// </summary>
+        public static string PublicIpIpv6 {
+            get {
+                return ResourceManager.GetString("PublicIpIpv6", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MTU Optimization Wizard.
+        /// </summary>
+        public static string MtuOptimizationWizard {
+            get {
+                return ResourceManager.GetString("MtuOptimizationWizard", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This wizard will help you find the optimal MTU for your network connection to avoid fragmentation.
+        /// </summary>
+        public static string MtuWizardDescription {
+            get {
+                return ResourceManager.GetString("MtuWizardDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Target Host:.
+        /// </summary>
+        public static string TargetHost {
+            get {
+                return ResourceManager.GetString("TargetHost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Start Estimation.
+        /// </summary>
+        public static string StartEstimation {
+            get {
+                return ResourceManager.GetString("StartEstimation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Estimation Complete.
+        /// </summary>
+        public static string EstimationComplete {
+            get {
+                return ResourceManager.GetString("EstimationComplete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Optimal Physical MTU: {0} bytes.
+        /// </summary>
+        public static string OptimalPhysicalMtu {
+            get {
+                return ResourceManager.GetString("OptimalPhysicalMtu", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Note: WireGuard MTU should be at least 60-80 bytes smaller than this.
+        /// </summary>
+        public static string MtuNote {
+            get {
+                return ResourceManager.GetString("MtuNote", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Apply to Configuration.
+        /// </summary>
+        public static string ApplyToConfiguration {
+            get {
+                return ResourceManager.GetString("ApplyToConfiguration", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Logs.
+        /// </summary>
+        public static string Logs {
+            get {
+                return ResourceManager.GetString("Logs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tunnels.
+        /// </summary>
+        public static string Tunnels {
+            get {
+                return ResourceManager.GetString("Tunnels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tunnels Configuration.
+        /// </summary>
+        public static string TunnelsConfiguration {
+            get {
+                return ResourceManager.GetString("TunnelsConfiguration", resourceCulture);
             }
         }
     }

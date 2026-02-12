@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -8,16 +8,19 @@ using WgAPI;
 using WgAPI.Commands;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Properties;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
     public class TunnelServicePrerequisite : PrerequisiteItem
     {
-        public TunnelServicePrerequisite() : this(new TunnelServiceNameSubCommand())
+        private readonly INetworkService _networkService;
+
+        public TunnelServicePrerequisite(INetworkService networkService) : this(networkService, new TunnelServiceNameSubCommand())
         {
         }
 
-        public TunnelServicePrerequisite(TunnelServiceNameSubCommand tunnelServiceNameSubCommand) : base
+        public TunnelServicePrerequisite(INetworkService networkService, TunnelServiceNameSubCommand tunnelServiceNameSubCommand) : base
         (
             title: Resources.TunnelService,
             successMessage: Resources.TunnelServiceInstalled,
@@ -26,13 +29,13 @@ namespace WgServerforWindows.Models
             configureText: Resources.UninstallTunnelService
         )
         {
+            _networkService = networkService;
             SubCommands.Add(tunnelServiceNameSubCommand);
         }
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            return NetworkInterface.GetAllNetworkInterfaces()
-                .Any(nic => nic.Name == GlobalAppSettings.Instance.TunnelServiceName);
+            return _networkService.IsTunnelServiceInstalled(GlobalAppSettings.Instance.TunnelServiceName);
         });
         private BooleanTimeCachedProperty _fulfilled;
 
@@ -46,11 +49,8 @@ namespace WgServerforWindows.Models
 
                 if (int.TryParse(listenPort, out int listenPortInt))
                 {
-                    IPEndPoint[] tcpEndPoints = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners();
-                    IPEndPoint[] udpEndPoints = IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners();
-
-                    bool anyTcpListener = tcpEndPoints.Any(endpoint => endpoint.Port == listenPortInt);
-                    bool anyUdpListener = udpEndPoints.Any(endpoint => endpoint.Port == listenPortInt);
+                    bool anyTcpListener = _networkService.IsPortInUse(listenPortInt, udp: false);
+                    bool anyUdpListener = _networkService.IsPortInUse(listenPortInt, udp: true);
 
                     if (anyUdpListener)
                     {
@@ -109,7 +109,7 @@ namespace WgServerforWindows.Models
 
             using (TemporaryFile temporaryFile = new(ServerConfigurationPrerequisite.ServerWGPath, ServerConfigurationPrerequisite.ServerWGPathWithCustomTunnelName))
             {
-                new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(temporaryFile.NewFilePath));
+                _networkService.InstallTunnelService(temporaryFile.NewFilePath);
             }
             
             await WaitForFulfilled();
@@ -121,7 +121,7 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(GlobalAppSettings.Instance.TunnelServiceName));
+            _networkService.UninstallTunnelService(GlobalAppSettings.Instance.TunnelServiceName);
             await WaitForFulfilled(false);
 
             WaitCursor.SetOverrideCursor(null);

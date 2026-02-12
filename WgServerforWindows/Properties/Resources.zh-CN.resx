@@ -498,15 +498,64 @@
   <data name="ClientCount" xml:space="preserve">
     <value>数量：{0}</value>
   </data>
+  <data name="Automation" xml:space="preserve">
+    <value>自动化</value>
+  </data>
+  <data name="EnableDynamicIpSync" xml:space="preserve">
+    <value>启用动态 IPv6 端点同步</value>
+  </data>
+  <data name="DynamicIpSyncDescription" xml:space="preserve">
+    <value>当公网 IPv6 地址发生变化时，自动更新服务器的端点地址。</value>
+  </data>
+  <data name="SystemLogs" xml:space="preserve">
+    <value>系统日志</value>
+  </data>
+  <data name="AutoRefresh" xml:space="preserve">
+    <value>自动刷新</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="MtuDescription" xml:space="preserve">
+    <value>WireGuard 接口的最大传输单元 (MTU)。</value>
+  </data>
+  <data name="MtuRangeValidationError" xml:space="preserve">
+    <value>MTU 必须在 576 到 65535 之间。</value>
+  </data>
+  <data name="MtuValidationError" xml:space="preserve">
+    <value>MTU 必须是有效的整数。</value>
+  </data>
   <data name="LatestHandshakeProperty" xml:space="preserve">
     <value>最近握手</value>
   </data>
   <data name="LatestHandshakePropertyDescription" xml:space="preserve">
-    <value>显示此客户端最近一次连接到服务器的时间。此字段仅供参考。</value>
+    <value>显示此客户端最近连接到服务器的时间。此字段仅供参考。</value>
   </data>
   <data name="LatestHandshakePropertyAction" xml:space="preserve">
     <value>刷新</value>
   </data>
+  <data name="NetworkStatus" xml:space="preserve">
+    <value>网络状态</value>
+  </data>
+  <data name="TrafficActivity" xml:space="preserve">
+    <value>流量活动</value>
+  </data>
+  <data name="DownloadRate" xml:space="preserve">
+    <value>下载速率</value>
+  </data>
+  <data name="UploadRate" xml:space="preserve">
+    <value>上传速率</value>
+  </data>
+  <data name="MtuOptimizer" xml:space="preserve">
+    <value>MTU 优化器</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="TunnelsConfiguration" xml:space="preserve">
+    <value>隧道配置</value>
+  </data>
+
   <data name="BootTaskDelaySuccess" xml:space="preserve">
     <value>设置启动时运行的自动任务的延迟。这有助于解决网络适配器加载缓慢的问题。</value>
   </data>
@@ -583,7 +632,53 @@
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
   </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>仪表盘</value>
+  </data>
+  <data name="PublicIpIpv6" xml:space="preserve">
+    <value>公网 IP (IPv6)</value>
+  </data>
+  <data name="MtuOptimizationWizard" xml:space="preserve">
+    <value>MTU 优化向导</value>
+  </data>
+  <data name="MtuWizardDescription" xml:space="preserve">
+    <value>此向导将帮助您找到网络连接的最佳 MTU，以避免分片。</value>
+  </data>
+  <data name="TargetHost" xml:space="preserve">
+    <value>目标主机:</value>
+  </data>
+  <data name="StartEstimation" xml:space="preserve">
+    <value>开始评估</value>
+  </data>
+  <data name="EstimationComplete" xml:space="preserve">
+    <value>评估完成</value>
+  </data>
+  <data name="OptimalPhysicalMtu" xml:space="preserve">
+    <value>最佳物理 MTU: {0} 字节</value>
+  </data>
+  <data name="MtuNote" xml:space="preserve">
+    <value>注意: WireGuard MTU 应比此值至少小 60-80 字节。</value>
+  </data>
+  <data name="ApplyToConfiguration" xml:space="preserve">
+    <value>应用到配置</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>关于</value>
+  </data>
+  <data name="MtuDescription" xml:space="preserve">
+    <value>WireGuard 接口的最大传输单元 (MTU)。</value>
+  </data>
+  <data name="MtuRangeValidationError" xml:space="preserve">
+    <value>MTU 必须介于 576 和 65535 之间。</value>
+  </data>
+  <data name="MtuValidationError" xml:space="preserve">
+    <value>MTU 必须是一个有效的整数。</value>
+  </data>
+
+  <data name="Tunnels" xml:space="preserve">
+    <value>隧道</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>日志</value>
   </data>
 </root>

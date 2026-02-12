@@ -1,17 +1,20 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Flurl.Http;
-using WgAPI;
+using WgAPI.Commands;
 using WgServerforWindows.Properties;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
     public class WireGuardExePrerequisite : PrerequisiteItem
     {
-        public WireGuardExePrerequisite() : base
+        private readonly INetworkService _networkService;
+
+        public WireGuardExePrerequisite(INetworkService networkService) : base
         (
             title: Resources.WireGuardExe,
             successMessage: Resources.WireGuardExeFound,
@@ -20,12 +23,12 @@ namespace WgServerforWindows.Models
             configureText: Resources.UninstallWireGuard
         )
         {
+            _networkService = networkService;
         }
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            _wireGuardExe ??= new WireGuardExe();
-            return _wireGuardExe.Exists;
+            return _networkService.IsWireGuardInstalled();
         });
         private BooleanTimeCachedProperty _fulfilled;
 
@@ -52,13 +55,12 @@ namespace WgServerforWindows.Models
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-            _wireGuardExe.ExecuteCommand(new UninstallCommand());
+            _networkService.UninstallWireGuard();
             Refresh();
 
             WaitCursor.SetOverrideCursor(null);
         }
 
         private readonly string wireGuardExeDownload = @"https://download.wireguard.com/windows-client/wireguard-installer.exe";
-        private WireGuardExe _wireGuardExe;
     }
 }

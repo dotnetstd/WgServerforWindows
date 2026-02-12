@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -11,7 +11,7 @@ namespace WgServerforWindows.Models
     /// <summary>
     /// Defines application-wide settings which will be persisted across sessions
     /// </summary>
-    internal class AppSettings : ObservableObject
+    public class AppSettings : ObservableObject
     {
         #region Singleton member
 
@@ -35,7 +35,8 @@ namespace WgServerforWindows.Models
                 .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
                 .PersistOn(nameof(Window.Closing))
                 .StopTrackingOn(nameof(Window.Closing))
-                .WhenPersistingProperty((w, p) => p.Cancel = p.Property == nameof(w.WindowState) && w.WindowState == WindowState.Minimized);
+                .WhenPersistingProperty((w, p) => p.Cancel = (p.Property == nameof(w.WindowState) && w.WindowState == WindowState.Minimized) ||
+                                                             (w.WindowState == WindowState.Maximized && (p.Property == nameof(w.Top) || p.Property == nameof(w.Left) || p.Property == nameof(w.Height) || p.Property == nameof(w.Width))));
         }
 
         #endregion
@@ -49,6 +50,7 @@ namespace WgServerforWindows.Models
                 .Property(a => a.CustomServerConfigDirectory)
                 .Property(a => a.CustomClientConfigDirectory)
                 .Property(a => a.ClientConfigurationExpansionStates)
+                .Property(a => a.IsDynamicIpSyncEnabled)
                 .Track(this);
         }
 
@@ -85,6 +87,16 @@ namespace WgServerforWindows.Models
         /// Tracks whether each client configuration is expanded in the UI or not
         /// </summary>
         public Dictionary<string, bool> ClientConfigurationExpansionStates = new Dictionary<string, bool>();
+
+        /// <summary>
+        /// Whether dynamic IP sync is enabled
+        /// </summary>
+        public bool IsDynamicIpSyncEnabled
+        {
+            get => _isDynamicIpSyncEnabled;
+            set => Set(nameof(IsDynamicIpSyncEnabled), ref _isDynamicIpSyncEnabled, value);
+        }
+        private bool _isDynamicIpSyncEnabled;
 
         /// <summary>
         /// The public tracker instance. Can be used to track things other than the <see cref="Instance"/>.

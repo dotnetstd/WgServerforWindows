@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,6 +11,7 @@ using WgServerforWindows.Controls;
 using WgServerforWindows.Properties;
 using System.Collections.Generic;
 using System.Linq;
+using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
@@ -18,7 +19,9 @@ namespace WgServerforWindows.Models
     {
         #region PrerequisiteItem members
 
-        public ServerStatusPrerequisite() : base
+        private readonly INetworkService _networkService;
+
+        public ServerStatusPrerequisite(INetworkService networkService) : base
         (
             title: Resources.ServerStatusTitle,
             successMessage: Resources.ServerStatusSuccessMessage,
@@ -27,6 +30,7 @@ namespace WgServerforWindows.Models
             configureText: Resources.ServerStatusConfigureText
         )
         {
+            _networkService = networkService;
             _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
             _updateTimer.Tick += (_, __) =>
             {
@@ -91,7 +95,7 @@ namespace WgServerforWindows.Models
                 }
 
                 // Get the output of the status command
-                string statusOutput = new WireGuardExe().ExecuteCommand(new ShowCommand(GlobalAppSettings.Instance.TunnelServiceName));
+                string statusOutput = _networkService.GetServerStatus(GlobalAppSettings.Instance.TunnelServiceName);
 
                 // Iterate through the output and correlate peer IDs to names
                 StringBuilder result = new StringBuilder();

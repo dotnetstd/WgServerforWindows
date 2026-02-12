@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WgServerforWindows.Controls
 {
@@ -22,7 +24,7 @@ namespace WgServerforWindows.Controls
             {
                 WaitCursor.SetOverrideCursor(null);
                 WaitCursor.IgnoreOverrideCursor = true;
-                new MainWindow().Show();
+                App.Current.Services.GetService<Views.MainShell>().Show();
             });
         }
 

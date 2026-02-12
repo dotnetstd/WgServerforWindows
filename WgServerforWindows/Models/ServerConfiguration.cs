@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -214,6 +214,32 @@ namespace WgServerforWindows.Models
             }
         };
         private EndpointConfigurationProperty _endpointProperty;
+
+        public ConfigurationProperty MtuProperty => _mtuProperty ??= new ConfigurationProperty(this)
+        {
+            Index = 4,
+            PersistentPropertyName = "MTU",
+            Name = nameof(MtuProperty),
+            Description = Resources.MtuDescription,
+            DefaultValue = "1420",
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    if (string.IsNullOrEmpty(obj.Value)) return default;
+                    if (int.TryParse(obj.Value, out int mtu))
+                    {
+                        if (mtu < 576 || mtu > 65535) return Resources.MtuRangeValidationError;
+                    }
+                    else
+                    {
+                        return Resources.MtuValidationError;
+                    }
+                    return default;
+                }
+            }
+        };
+        private ConfigurationProperty _mtuProperty;
 
         // This property is now configured on the client (and targeted to the client's (peer) section in the server config).
         // It exists here only for backwards compatibility, since it used to be configured here.
