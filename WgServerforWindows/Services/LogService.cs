@@ -23,16 +23,23 @@ namespace WgServerforWindows.Services
                 
                 // ExecuteCommand is synchronous in WireGuardExe (it has a Task.Run wrapper but blocks).
                 // Ideally we should wrap this in Task.Run if it takes time.
-                await Task.Run(() => wg.ExecuteCommand(command, out _));
+                string result = await Task.Run(() => wg.ExecuteCommand(command, out int exitCode));
 
                 if (File.Exists(tempFile))
                 {
-                    return await File.ReadAllTextAsync(tempFile);
+                    string content = await File.ReadAllTextAsync(tempFile);
+                    if (string.IsNullOrWhiteSpace(content))
+                    {
+                        return $"Exit Code: {result}";
+                    }
+                    return content;
                 }
+                
+                return $"Command output: {result}";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Log error or return empty
+                return $"Error: {ex.Message}";
             }
             finally
             {

@@ -1,3 +1,4 @@
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
@@ -38,7 +39,11 @@ namespace WgServerforWindows.Models
             _toastService = toastService;
 
             _autoRefreshTimer = new System.Timers.Timer(5000); // 5 seconds
-            _autoRefreshTimer.Elapsed += async (s, e) => await RefreshLogsAsync(false);
+            _autoRefreshTimer.Elapsed += async (s, e) =>
+            {
+                // Ensure we update on UI thread for LogContent
+                await App.Current.Dispatcher.InvokeAsync(async () => await RefreshLogsAsync(false));
+            };
             _autoRefreshTimer.AutoReset = true;
             
             // Initial load
@@ -63,12 +68,23 @@ namespace WgServerforWindows.Models
                 if (string.IsNullOrWhiteSpace(logs))
                 {
                     LogContent = "No logs available or failed to retrieve logs.";
-                    if (showToast) _toastService.Show("Failed to retrieve logs", ToastType.Warning);
                 }
                 else
                 {
                     LogContent = logs;
-                    if (showToast) _toastService.Show("Logs refreshed", ToastType.Success);
+                }
+
+                if (showToast)
+                {
+                    _toastService.Show("Logs refreshed", ToastType.Success);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogContent = $"Error retrieving logs: {ex.Message}";
+                if (showToast)
+                {
+                    _toastService.Show($"Failed to retrieve logs: {ex.Message}", ToastType.Error);
                 }
             }
             finally

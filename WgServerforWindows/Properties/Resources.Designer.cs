@@ -466,6 +466,24 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run at Startup.
+        /// </summary>
+        public static string EnableAutoStart {
+            get {
+                return ResourceManager.GetString("EnableAutoStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically start the application when Windows starts..
+        /// </summary>
+        public static string EnableAutoStartDescription {
+            get {
+                return ResourceManager.GetString("EnableAutoStartDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabling internet sharing with network &apos;{0}&apos;..
         /// </summary>
         public static string EnablingInternetSharing {
