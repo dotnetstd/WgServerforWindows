@@ -681,4 +681,19 @@
   <data name="Logs" xml:space="preserve">
     <value>日志</value>
   </data>
+  <data name="EnableAutoStart" xml:space="preserve">
+    <value>开机自动启动</value>
+  </data>
+  <data name="EnableAutoStartDescription" xml:space="preserve">
+    <value>Windows 启动时自动运行应用程序。</value>
+  </data>
+  <data name="Automation" xml:space="preserve">
+    <value>自动化</value>
+  </data>
+  <data name="EnableDynamicIpSync" xml:space="preserve">
+    <value>启用动态 IP 同步</value>
+  </data>
+  <data name="DynamicIpSyncDescription" xml:space="preserve">
+    <value>公网 IP 更改时自动更新服务器端点。</value>
+  </data>
 </root>

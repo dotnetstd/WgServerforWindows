@@ -25,6 +25,8 @@ namespace WgServerforWindows.Models
 
         public string AppVersion => $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
 
+        public string Title => $"{WgServerforWindows.Properties.Resources.WS4W} {AppVersion}";
+
         public MainShellViewModel(IToastService toastService)
         {
             _toastService = toastService;

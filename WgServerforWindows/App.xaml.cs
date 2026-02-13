@@ -8,6 +8,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Drawing;
+using System.Windows.Forms;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using WgServerforWindows.Cli.Options;
@@ -28,6 +30,8 @@ namespace WgServerforWindows
         public IServiceProvider Services { get; private set; }
 
         public new static App Current => (App)Application.Current;
+
+        private NotifyIcon _notifyIcon;
 
         public App()
         {
@@ -84,10 +88,26 @@ namespace WgServerforWindows
 
             base.OnStartup(e);
 
-            if (e.Args.Any())
+            bool startMinimized = e.Args.Contains("--minimized");
+            var args = e.Args.Where(a => a != "--minimized").ToArray();
+
+            // Initialize NotifyIcon
+            _notifyIcon = new NotifyIcon
+            {
+                Icon = new Icon(GetResourceStream(new Uri("pack://application:,,,/Images/logo.ico")).Stream),
+                Visible = true,
+                Text = "WS4W"
+            };
+            _notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
+            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
+            _notifyIcon.ContextMenuStrip.Items.Add(WgServerforWindows.Properties.Resources.Dashboard, null, (s, args) => ShowMainWindow());
+            _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            _notifyIcon.ContextMenuStrip.Items.Add(WgServerforWindows.Properties.Resources.Close, null, (s, args) => Shutdown());
+
+            if (args.Any())
             {
                 // First, handle UI-related args
-                var uiArgsParsed = Parser.Default.ParseArguments<StatusCommand, object>(e.Args)
+                var uiArgsParsed = Parser.Default.ParseArguments<StatusCommand, object>(args)
                     .WithParsed<StatusCommand>(Status);
 
                 if (uiArgsParsed.Tag != ParserResultType.Parsed)
@@ -97,7 +117,7 @@ namespace WgServerforWindows
                     // We don't want to handle Dispatcher exceptions in this scenario, since we are UI-less
                     DispatcherUnhandledException -= Application_DispatcherUnhandledException;
 
-                    Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand, PrivateNetworkCommand>(e.Args)
+                    Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand, PrivateNetworkCommand>(args)
                         .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing)
                         .WithParsed<SetPathCommand>(SetPath)
                         .WithParsed<SetNetIpAddressCommand>(SetNetIpAddress)
@@ -111,28 +131,46 @@ namespace WgServerforWindows
             {
                 // Otherwise, this is a normal Windowed startup.
 
-                // First, see if we're already running with no args. If so, focus that instance.
-                foreach (Process existingProcess in Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Where(p => p.Id != Process.GetCurrentProcess().Id))
-                {
-                    // Get the process's command-line args to see if it's also a normal windowed instance.
-                    ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(@"root/cimv2", $"select CommandLine from Win32_Process where ProcessId = '{existingProcess.Id}'");
-                    foreach (var ws4wInstance in managementObjectSearcher.Get().OfType<ManagementObject>())
-                    {
-                        if (ws4wInstance.GetPropertyValue("CommandLine")?.ToString() is { } commandLine)
-                        {
-                            int substringIndex = commandLine.LastIndexOf('"') + 2;
-                            if (substringIndex > commandLine.Length || string.IsNullOrEmpty(commandLine.Substring(substringIndex)))
-                            {
-                                SetForegroundWindow(existingProcess.MainWindowHandle);
-                                Environment.Exit(0);
-                            }
-                        }
-                    }
-                }
-
                 // Finally, do a normal startup.
-                App.Current.Services.GetService<MainShell>().Show();
+                var mainShell = App.Current.Services.GetService<MainShell>();
+                if (startMinimized)
+                {
+                    mainShell.WindowState = WindowState.Minimized;
+                    mainShell.Hide(); // Hide from taskbar if starting minimized
+                }
+                else
+                {
+                    mainShell.Show();
+                }
             }
+        }
+
+        private void ShowMainWindow()
+        {
+            var mainShell = App.Current.Services.GetService<MainShell>();
+            if (mainShell.IsVisible)
+            {
+                if (mainShell.WindowState == WindowState.Minimized)
+                {
+                    mainShell.WindowState = WindowState.Normal;
+                }
+                mainShell.Activate();
+            }
+            else
+            {
+                mainShell.Show();
+                mainShell.WindowState = WindowState.Normal;
+                mainShell.Activate();
+            }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            if (_notifyIcon != null)
+            {
+                _notifyIcon.Dispose();
+            }
+            base.OnExit(e);
         }
 
         private static void RestartInternetSharing(RestartInternetSharingCommand o)

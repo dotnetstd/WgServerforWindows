@@ -13,6 +13,28 @@ namespace WgServerforWindows.Views
         {
             InitializeComponent();
             DataContext = viewModel;
+
+            StateChanged += MainShell_StateChanged;
+            Closing += MainShell_Closing;
+        }
+
+        private void MainShell_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+            }
+        }
+
+        private void MainShell_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // If the user is closing the window, we actually just want to hide it
+            // unless the app is shutting down.
+            if (AppSettings.Instance.IsAutoStartEnabled)
+            {
+                e.Cancel = true;
+                Hide();
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)

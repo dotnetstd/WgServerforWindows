@@ -734,4 +734,19 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
+  <data name="EnableAutoStart" xml:space="preserve">
+    <value>Run at Startup</value>
+  </data>
+  <data name="EnableAutoStartDescription" xml:space="preserve">
+    <value>Automatically start the application when Windows starts.</value>
+  </data>
+  <data name="Automation" xml:space="preserve">
+    <value>Automation</value>
+  </data>
+  <data name="EnableDynamicIpSync" xml:space="preserve">
+    <value>Enable Dynamic IP Sync</value>
+  </data>
+  <data name="DynamicIpSyncDescription" xml:space="preserve">
+    <value>Automatically update server endpoint when public IP changes.</value>
+  </data>
 </root>

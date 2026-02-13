@@ -51,6 +51,7 @@ namespace WgServerforWindows.Models
                 .Property(a => a.CustomClientConfigDirectory)
                 .Property(a => a.ClientConfigurationExpansionStates)
                 .Property(a => a.IsDynamicIpSyncEnabled)
+                .Property(a => a.IsAutoStartEnabled)
                 .Track(this);
         }
 
@@ -94,9 +95,58 @@ namespace WgServerforWindows.Models
         public bool IsDynamicIpSyncEnabled
         {
             get => _isDynamicIpSyncEnabled;
-            set => Set(nameof(IsDynamicIpSyncEnabled), ref _isDynamicIpSyncEnabled, value);
+            set
+            {
+                if (Set(nameof(IsDynamicIpSyncEnabled), ref _isDynamicIpSyncEnabled, value))
+                {
+                    Save();
+                }
+            }
         }
         private bool _isDynamicIpSyncEnabled;
+
+        /// <summary>
+        /// Whether the application should start automatically with Windows
+        /// </summary>
+        public bool IsAutoStartEnabled
+        {
+            get => _isAutoStartEnabled;
+            set
+            {
+                if (Set(nameof(IsAutoStartEnabled), ref _isAutoStartEnabled, value))
+                {
+                    UpdateAutoStart(value);
+                    Save();
+                }
+            }
+        }
+        private bool _isAutoStartEnabled;
+
+        private void UpdateAutoStart(bool enable)
+        {
+            string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+            string appName = "WS4W";
+            string appPath = $"\"{Environment.ProcessPath}\" --minimized";
+
+            try
+            {
+                using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(runKey, true))
+                {
+                    if (enable)
+                    {
+                        key.SetValue(appName, appPath);
+                    }
+                    else
+                    {
+                        key.DeleteValue(appName, false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to update auto-start: {ex.Message}");
+            }
+        }
 
         /// <summary>
         /// The public tracker instance. Can be used to track things other than the <see cref="Instance"/>.
