@@ -26,6 +26,9 @@ namespace WgServerforWindows.Views
                 }
             }
             _isInitialized = true;
+
+            // Ensure settings are saved when leaving or property changes
+            Unloaded += (s, e) => AppSettings.Instance.Save();
         }
 
         private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -31,10 +31,13 @@ namespace WgServerforWindows
 
         public new static App Current => (App)System.Windows.Application.Current;
 
+        private static System.Threading.Mutex? _mutex;
+
         private NotifyIcon _notifyIcon;
 
         public App()
         {
+            AppSettings.Instance.Load();
             Services = ConfigureServices();
             DispatcherUnhandledException += Application_DispatcherUnhandledException;
         }
@@ -70,6 +73,19 @@ namespace WgServerforWindows
 
         protected override void OnStartup(StartupEventArgs e)
         {
+
+            bool createdNew;
+            _mutex = new System.Threading.Mutex(true, "WgServerforWindows", out createdNew);
+
+            if (!createdNew)
+            {
+                // Instance already running
+                System.Windows.MessageBox.Show("WgServerforWindows is already running.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                Current.Shutdown();
+                return;
+            }
+
+
             // Load language setting
             var language = GlobalAppSettings.Instance.Language;
             if (!string.IsNullOrEmpty(language))
@@ -85,6 +101,8 @@ namespace WgServerforWindows
                     // Fallback to default if culture is invalid
                 }
             }
+
+            
 
             base.OnStartup(e);
 
