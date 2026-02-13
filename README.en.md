@@ -7,9 +7,11 @@ WS4W is a desktop application that allows running and managing a WireGuard serve
 > **New Feature**: Now supports **English / Chinese** bilingual switching! (With full Modern UI upgrade)
 
 # WS4W v2.3.0 - What's New
-* **UI Interaction Optimization**: Removed traditional splash screen, introduced loading overlay and IsBusy state management.
+* **Auto-start and Background Run**: Added auto-start on boot functionality, supporting background run via system tray icon (--minimized parameter).
+* **UI Interaction Optimization**: Removed traditional splash screen, introduced loading overlay and IsBusy state management; the title bar now displays the software version.
 * **Window Persistence**: The app now remembers its last window size and position (excluding minimized/maximized).
-* **Bilingual Support**: Completed translations for new features (MTU Wizard, Logs Center, Dynamic IP).
+* **Persistence Fix**: Fixed an issue where the IPv6 sync parameter was not saved to local storage after configuration.
+* **Bilingual Support**: Completed translations for new features (Auto-start, MTU Wizard, Logs Center, Dynamic IP).
 * **Stability Improvements**: Fixed crashes on the "Settings" page.
 
 Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](https://www.henrychang.ca/how-to-setup-wireguard-vpn-server-on-windows/), my goal was to create an application that automated and simplified many of the complex steps. While still not quite a plug-and-play solution, the idea is to be able to perform each of the prerequisite steps, one-by-one, without running any scripts, modifying the Registry, or entering the Control Panel.

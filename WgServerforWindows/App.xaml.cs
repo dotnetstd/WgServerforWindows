@@ -102,7 +102,12 @@ namespace WgServerforWindows
             _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
             _notifyIcon.ContextMenuStrip.Items.Add(WgServerforWindows.Properties.Resources.Dashboard, null, (s, args) => ShowMainWindow());
             _notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            _notifyIcon.ContextMenuStrip.Items.Add(WgServerforWindows.Properties.Resources.Close, null, (s, args) => Shutdown());
+            _notifyIcon.ContextMenuStrip.Items.Add(WgServerforWindows.Properties.Resources.Close, null, (s, args) => 
+            {
+                var mainShell = App.Current.Services.GetService<MainShell>();
+                mainShell.Shutdown();
+                Shutdown();
+            });
 
             if (args.Any())
             {

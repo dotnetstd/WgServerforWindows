@@ -9,6 +9,8 @@ namespace WgServerforWindows.Views
 {
     public partial class MainShell : Window
     {
+        private bool _isShuttingDown = false;
+
         public MainShell(MainShellViewModel viewModel)
         {
             InitializeComponent();
@@ -16,6 +18,12 @@ namespace WgServerforWindows.Views
 
             StateChanged += MainShell_StateChanged;
             Closing += MainShell_Closing;
+        }
+
+        public void Shutdown()
+        {
+            _isShuttingDown = true;
+            Close();
         }
 
         private void MainShell_StateChanged(object sender, EventArgs e)
@@ -29,8 +37,8 @@ namespace WgServerforWindows.Views
         private void MainShell_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // If the user is closing the window, we actually just want to hide it
-            // unless the app is shutting down.
-            if (AppSettings.Instance.IsAutoStartEnabled)
+            // unless the app is shutting down or auto-start is disabled.
+            if (!_isShuttingDown && AppSettings.Instance.IsAutoStartEnabled)
             {
                 e.Cancel = true;
                 Hide();
