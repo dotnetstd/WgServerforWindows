@@ -25,11 +25,11 @@ namespace WgServerforWindows
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public IServiceProvider Services { get; private set; }
 
-        public new static App Current => (App)Application.Current;
+        public new static App Current => (App)System.Windows.Application.Current;
 
         private NotifyIcon _notifyIcon;
 
@@ -289,7 +289,7 @@ namespace WgServerforWindows
             new ServerStatusPrerequisite(networkService).Show();
         }
 
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             // In case something was in progress when the error occurred
             WaitCursor.SetOverrideCursor(null);
