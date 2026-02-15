@@ -123,6 +123,32 @@ namespace WgServerforWindows
                 }
             }
 
+            // Auto check and sync public IP on startup
+            if (AppSettings.Instance.IsPublicIpCheckOnStartup)
+            {
+                var networkService = App.Current.Services.GetService<INetworkService>();
+                var dynamicEndpointService = App.Current.Services.GetService<IDynamicEndpointService>();
+                var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(networkService, new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand());
+                var tunnelServicePrerequisite = new TunnelServicePrerequisite(networkService, new TunnelServiceNameSubCommand());
+                
+                if (serverConfigurationPrerequisite.Fulfilled && tunnelServicePrerequisite.Fulfilled)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        var delay = GlobalAppSettings.Instance.BootTaskDelay;
+                        if (delay > TimeSpan.Zero)
+                        {
+                            await System.Threading.Tasks.Task.Delay(delay);
+                        }
+                        var currentIp = await dynamicEndpointService.GetPublicIpv6Async();
+                        if (!string.IsNullOrEmpty(currentIp))
+                        {
+                            await dynamicEndpointService.UpdateEndpointAsync(currentIp);
+                        }
+                    });
+                }
+            }
+
             base.OnStartup(e);
 
             bool startMinimized = e.Args.Contains("--minimized");

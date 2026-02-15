@@ -626,6 +626,12 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="EnableNatOnAppStartDescription" xml:space="preserve">
     <value>When enabled, WS4W will attempt to enable NAT automatically on startup, only if the server configuration and tunnel service are already configured, and Internet Connection Sharing is not enabled.</value>
   </data>
+  <data name="EnablePublicIpCheckOnAppStart" xml:space="preserve">
+    <value>Check and sync public IP on application startup</value>
+  </data>
+  <data name="EnablePublicIpCheckOnAppStartDescription" xml:space="preserve">
+    <value>On startup, detect the current public IPv6 and update the server's endpoint if prerequisites are satisfied.</value>
+  </data>
   <data name="TunnelServiceNameSubCommandConfigureText" xml:space="preserve">
     <value>Change tunnel service name</value>
   </data>

@@ -53,6 +53,7 @@ namespace WgServerforWindows.Models
                 .Property(a => a.IsDynamicIpSyncEnabled)
                 .Property(a => a.IsAutoStartEnabled)
                 .Property(a => a.IsAutoEnableNatOnStartup)
+                .Property(a => a.IsPublicIpCheckOnStartup)
                 .Track(this);
         }
 
@@ -138,6 +139,22 @@ namespace WgServerforWindows.Models
             }
         }
         private bool _isAutoEnableNatOnStartup;
+
+        /// <summary>
+        /// Whether to automatically perform a public IP check and sync endpoint on startup
+        /// </summary>
+        public bool IsPublicIpCheckOnStartup
+        {
+            get => _isPublicIpCheckOnStartup;
+            set
+            {
+                if (Set(nameof(IsPublicIpCheckOnStartup), ref _isPublicIpCheckOnStartup, value))
+                {
+                    Save();
+                }
+            }
+        }
+        private bool _isPublicIpCheckOnStartup;
 
         private void UpdateAutoStart(bool enable)
         {

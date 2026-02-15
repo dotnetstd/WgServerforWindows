@@ -48,6 +48,13 @@
                                   Margin="0,10,0,5"/>
                         <TextBlock Text="{x:Static properties:Resources.EnableNatOnAppStartDescription}"
                                    FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
+
+                        <!-- Public IP Check on App Startup -->
+                        <CheckBox Content="{x:Static properties:Resources.EnablePublicIpCheckOnAppStart}"
+                                  IsChecked="{Binding Settings.IsPublicIpCheckOnStartup}"
+                                  Margin="0,10,0,5"/>
+                        <TextBlock Text="{x:Static properties:Resources.EnablePublicIpCheckOnAppStartDescription}"
+                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
                     </StackPanel>
                 </Border>
 

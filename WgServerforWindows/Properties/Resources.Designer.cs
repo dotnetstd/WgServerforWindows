@@ -856,6 +856,24 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check and sync public IP on application startup.
+        /// </summary>
+        public static string EnablePublicIpCheckOnAppStart {
+            get {
+                return ResourceManager.GetString("EnablePublicIpCheckOnAppStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On startup, detect the current public IPv6 and update the server&apos;s endpoint if prerequisites are satisfied..
+        /// </summary>
+        public static string EnablePublicIpCheckOnAppStartDescription {
+            get {
+                return ResourceManager.GetString("EnablePublicIpCheckOnAppStartDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network Address Translation.
         /// </summary>
         public static string NetworkAddressTranslation {
