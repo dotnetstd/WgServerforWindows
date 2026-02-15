@@ -41,6 +41,13 @@
                                   Margin="0,0,0,5"/>
                         <TextBlock Text="{x:Static properties:Resources.DynamicIpSyncDescription}" 
                                    FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
+
+                        <!-- Auto Enable NAT on App Startup -->
+                        <CheckBox Content="{x:Static properties:Resources.EnableNatOnAppStart}"
+                                  IsChecked="{Binding Settings.IsAutoEnableNatOnStartup}"
+                                  Margin="0,10,0,5"/>
+                        <TextBlock Text="{x:Static properties:Resources.EnableNatOnAppStartDescription}"
+                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
                     </StackPanel>
                 </Border>
 

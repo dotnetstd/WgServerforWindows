@@ -102,7 +102,26 @@ namespace WgServerforWindows
                 }
             }
 
-            
+            // Auto enable NAT on startup (if enabled and prerequisites are satisfied)
+            if (AppSettings.Instance.IsAutoEnableNatOnStartup)
+            {
+                var networkService = App.Current.Services.GetService<INetworkService>();
+                var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(networkService, new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand());
+                var tunnelServicePrerequisite = new TunnelServicePrerequisite(networkService, new TunnelServiceNameSubCommand());
+                var internetSharingPrerequisite = new InternetSharingPrerequisite(networkService);
+                var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite(networkService);
+                var newNetNatPrerequisite = new NewNetNatPrerequisite(networkService);
+
+                if (newNetNatPrerequisite.IsSupported
+                    && serverConfigurationPrerequisite.Fulfilled
+                    && tunnelServicePrerequisite.Fulfilled
+                    && !internetSharingPrerequisite.Fulfilled
+                    && !persistentInternetSharingPrerequisite.Fulfilled
+                    && !newNetNatPrerequisite.Fulfilled)
+                {
+                    newNetNatPrerequisite.Resolve();
+                }
+            }
 
             base.OnStartup(e);
 

@@ -501,6 +501,12 @@
   <data name="Automation" xml:space="preserve">
     <value>自动化</value>
   </data>
+  <data name="EnableNatOnAppStart" xml:space="preserve">
+	  <value>程序启动时自动启用 NAT</value>
+  </data>
+  <data name="EnableNatOnAppStartDescription" xml:space="preserve">
+	  <value>启用后，WS4W 会在启动时自动尝试启用 NAT，仅当服务器配置与隧道服务已完成配置，且未启用 Internet 连接共享(ICS) 时执行。</value>
+  </data>
   <data name="EnableDynamicIpSync" xml:space="preserve">
     <value>启用动态 IPv6 端点同步</value>
   </data>

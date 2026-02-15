@@ -620,6 +620,12 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="NetNatRangeValidationError" xml:space="preserve">
     <value>The NAT Network range does not contain the WireGuard server range ({0}).</value>
   </data>
+  <data name="EnableNatOnAppStart" xml:space="preserve">
+    <value>Enable NAT on application startup</value>
+  </data>
+  <data name="EnableNatOnAppStartDescription" xml:space="preserve">
+    <value>When enabled, WS4W will attempt to enable NAT automatically on startup, only if the server configuration and tunnel service are already configured, and Internet Connection Sharing is not enabled.</value>
+  </data>
   <data name="TunnelServiceNameSubCommandConfigureText" xml:space="preserve">
     <value>Change tunnel service name</value>
   </data>

@@ -52,6 +52,7 @@ namespace WgServerforWindows.Models
                 .Property(a => a.ClientConfigurationExpansionStates)
                 .Property(a => a.IsDynamicIpSyncEnabled)
                 .Property(a => a.IsAutoStartEnabled)
+                .Property(a => a.IsAutoEnableNatOnStartup)
                 .Track(this);
         }
 
@@ -121,6 +122,22 @@ namespace WgServerforWindows.Models
             }
         }
         private bool _isAutoStartEnabled;
+
+        /// <summary>
+        /// Whether to automatically enable NAT routing on application startup (when prerequisites are satisfied)
+        /// </summary>
+        public bool IsAutoEnableNatOnStartup
+        {
+            get => _isAutoEnableNatOnStartup;
+            set
+            {
+                if (Set(nameof(IsAutoEnableNatOnStartup), ref _isAutoEnableNatOnStartup, value))
+                {
+                    Save();
+                }
+            }
+        }
+        private bool _isAutoEnableNatOnStartup;
 
         private void UpdateAutoStart(bool enable)
         {
