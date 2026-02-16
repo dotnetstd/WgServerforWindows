@@ -7,6 +7,29 @@
              xmlns:controls="clr-namespace:WgServerforWindows.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- Styles -->
+            <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="#333333"/>
+            </Style>
+            
+            <Style x:Key="ModernCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="#FFFFFF"/>
+                <Setter Property="BorderBrush" Value="#DDDDDD"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="3" Opacity="0.2" Direction="270" ShadowDepth="2"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="10">
@@ -55,6 +78,63 @@
                                   Margin="0,10,0,5"/>
                         <TextBlock Text="{x:Static properties:Resources.EnablePublicIpCheckOnAppStartDescription}"
                                    FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Windows Auto Login Section -->
+                <Border Style="{StaticResource ModernCardStyle}" Margin="0,0,0,10">
+                    <StackPanel>
+                        <TextBlock Text="{x:Static properties:Resources.WindowsAutoLogin}" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <!-- Auto Login Enabled -->
+                        <CheckBox Content="{x:Static properties:Resources.EnableAutoLogin}" 
+                                  IsChecked="{Binding Settings.IsAutoLoginEnabled}" 
+                                  Margin="0,0,0,5"/>
+                        <TextBlock Text="{x:Static properties:Resources.EnableAutoLoginDescription}"
+                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,10"/>
+
+                        <!-- Username -->
+                        <StackPanel Margin="0,5,0,5" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
+                            <TextBlock Text="{x:Static properties:Resources.Username}" Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding Settings.AutoLoginUsername, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="300" HorizontalAlignment="Left" MaxWidth="300"/>
+                        </StackPanel>
+
+                        <!-- Password -->
+                        <StackPanel Margin="0,5,0,0" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
+                            <TextBlock Text="{x:Static properties:Resources.Password}" Margin="0,0,0,3"/>
+                            <PasswordBox x:Name="PasswordBox" Width="300" HorizontalAlignment="Left" MaxWidth="300"
+                                         PasswordChanged="PasswordBox_PasswordChanged"/>
+                        </StackPanel>
+
+                        <!-- Validate Button -->
+                        <StackPanel Margin="0,10,0,0" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
+                            <Button Content="验证凭据" 
+                                    Click="ValidateCredentialsButton_Click"
+                                    Width="150" HorizontalAlignment="Left" MaxWidth="150"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Automatic Desktop Login Section -->
+                <Border Style="{StaticResource ModernCardStyle}" Margin="0,0,0,10">
+                    <StackPanel>
+                        <TextBlock Text="自动进入桌面" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="通过修改注册表实现Windows自动登录并进入桌面，无需用户手动登录。" 
+                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="0,0,0,15"/>
+
+                        <!-- Action Buttons -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button Content="启用自动进入桌面" 
+                                    Click="EnableAutoDesktopLoginButton_Click"
+                                    Width="200" HorizontalAlignment="Left" MaxWidth="200" Margin="0,0,10,0"/>
+                            <Button Content="打开用户账户设置(netplwiz)" 
+                                    Click="OpenNetplwizButton_Click"
+                                    Width="250" HorizontalAlignment="Left" MaxWidth="250" Margin="0,0,10,0"/>
+                            <Button Content="还原设置" 
+                                    Click="RestoreAutoDesktopLoginButton_Click"
+                                    Width="150" HorizontalAlignment="Left" MaxWidth="150"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 

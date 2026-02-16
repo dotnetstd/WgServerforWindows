@@ -310,6 +310,9 @@ Current value: {1}</value>
   <data name="SystemLogs" xml:space="preserve">
     <value>System Logs</value>
   </data>
+  <data name="OperationLogs" xml:space="preserve">
+    <value>Operation Logs</value>
+  </data>
   <data name="AutoRefresh" xml:space="preserve">
     <value>Auto Refresh</value>
   </data>
@@ -752,13 +755,23 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="EnableAutoStartDescription" xml:space="preserve">
     <value>Automatically start the application when Windows starts.</value>
   </data>
-  <data name="Automation" xml:space="preserve">
-    <value>Automation</value>
+  <data name="WindowsAutoLogin" xml:space="preserve">
+    <value>Windows Auto Login (WinServer 2025)</value>
   </data>
-  <data name="EnableDynamicIpSync" xml:space="preserve">
-    <value>Enable Dynamic IP Sync</value>
+  <data name="EnableAutoLogin" xml:space="preserve">
+    <value>Enable Auto Login</value>
   </data>
-  <data name="DynamicIpSyncDescription" xml:space="preserve">
-    <value>Automatically update server endpoint when public IP changes.</value>
+  <data name="EnableAutoLoginDescription" xml:space="preserve">
+    <value>Automatically log in to Windows desktop on startup without entering credentials. Requires administrator privileges.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ValidateCredentials" xml:space="preserve">
+    <value>Validate Credentials</value>
   </data>
 </root>
+

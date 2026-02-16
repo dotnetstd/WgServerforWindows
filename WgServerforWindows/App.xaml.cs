@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
@@ -12,8 +13,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
+using SharpConfig;
 using WgServerforWindows.Cli.Options;
 using WgServerforWindows.Controls;
+using WgServerforWindows.Extensions;
 using WgServerforWindows.Models;
 using WgServerforWindows.Views;
 using WgServerforWindows.Services.Interfaces;
@@ -37,8 +40,19 @@ namespace WgServerforWindows
 
         public App()
         {
-            AppSettings.Instance.Load();
+            // 先初始化Services，确保即使AppSettings加载失败也能正常启动
             Services = ConfigureServices();
+            
+            try
+            {
+                AppSettings.Instance.Load();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"加载AppSettings失败: {ex.Message}");
+                // 即使加载失败也继续启动
+            }
+            
             DispatcherUnhandledException += Application_DispatcherUnhandledException;
         }
 
@@ -47,7 +61,10 @@ namespace WgServerforWindows
             var services = new ServiceCollection();
 
             // ViewModels
-            services.AddSingleton<MainWindowModel>();
+            services.AddSingleton<MainWindowModel>(sp => new MainWindowModel(
+                sp.GetRequiredService<INetworkService>(),
+                sp.GetRequiredService<IOperationLogService>()
+            ));
             services.AddSingleton<MainShellViewModel>();
             services.AddSingleton<DashboardViewModel>();
             services.AddTransient<LogsViewModel>();
@@ -66,6 +83,7 @@ namespace WgServerforWindows
             services.AddSingleton<IToastService, ToastService>();
             services.AddSingleton<IDynamicEndpointService, DynamicEndpointService>();
             services.AddSingleton<ILogService, LogService>();
+            services.AddSingleton<IOperationLogService, OperationLogService>();
             services.AddSingleton<INetworkService, NetworkService>();
 
             return services.BuildServiceProvider();
@@ -102,15 +120,21 @@ namespace WgServerforWindows
                 }
             }
 
+            // 获取操作日志服务
+            var operationLogService = Services.GetService<IOperationLogService>();
+            operationLogService.Log("Application started");
+            
             // Auto enable NAT on startup (if enabled and prerequisites are satisfied)
             if (AppSettings.Instance.IsAutoEnableNatOnStartup)
             {
-                var networkService = App.Current.Services.GetService<INetworkService>();
+                var networkService = Services.GetService<INetworkService>();
                 var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(networkService, new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand());
                 var tunnelServicePrerequisite = new TunnelServicePrerequisite(networkService, new TunnelServiceNameSubCommand());
                 var internetSharingPrerequisite = new InternetSharingPrerequisite(networkService);
                 var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite(networkService);
                 var newNetNatPrerequisite = new NewNetNatPrerequisite(networkService);
+
+                operationLogService.Log("Checking if NAT should be auto-enabled on startup");
 
                 if (newNetNatPrerequisite.IsSupported
                     && serverConfigurationPrerequisite.Fulfilled
@@ -119,33 +143,109 @@ namespace WgServerforWindows
                     && !persistentInternetSharingPrerequisite.Fulfilled
                     && !newNetNatPrerequisite.Fulfilled)
                 {
+                    operationLogService.Log("Auto-enabling NAT on startup");
                     newNetNatPrerequisite.Resolve();
+                    operationLogService.Log("NAT auto-enabled successfully");
+                }
+                else
+                {
+                    operationLogService.Log("NAT auto-enable skipped: prerequisites not met");
                 }
             }
 
             // Auto check and sync public IP on startup
             if (AppSettings.Instance.IsPublicIpCheckOnStartup)
             {
-                var networkService = App.Current.Services.GetService<INetworkService>();
-                var dynamicEndpointService = App.Current.Services.GetService<IDynamicEndpointService>();
+                var networkService = Services.GetService<INetworkService>();
+                var dynamicEndpointService = Services.GetService<IDynamicEndpointService>();
                 var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(networkService, new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand());
                 var tunnelServicePrerequisite = new TunnelServicePrerequisite(networkService, new TunnelServiceNameSubCommand());
+                var newNetNatPrerequisite = new NewNetNatPrerequisite(networkService);
+                var internetSharingPrerequisite = new InternetSharingPrerequisite(networkService);
+                var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite(networkService);
                 
-                if (serverConfigurationPrerequisite.Fulfilled && tunnelServicePrerequisite.Fulfilled)
+                operationLogService.Log("Checking if public IP should be auto-checked on startup");
+                
+                // 检查所有关键配置是否均处于正常状态
+                bool isServerConfigValid = serverConfigurationPrerequisite.Fulfilled;
+                bool isTunnelServiceValid = tunnelServicePrerequisite.Fulfilled;
+                bool isNatValid = newNetNatPrerequisite.IsSupported ? newNetNatPrerequisite.Fulfilled : (internetSharingPrerequisite.Fulfilled || persistentInternetSharingPrerequisite.Fulfilled);
+                
+                operationLogService.Log($"Configuration check results: ServerConfigValid={isServerConfigValid}, TunnelServiceValid={isTunnelServiceValid}, NatValid={isNatValid}");
+                
+                if (isServerConfigValid && isTunnelServiceValid && isNatValid)
                 {
                     System.Threading.Tasks.Task.Run(async () =>
                     {
                         var delay = GlobalAppSettings.Instance.BootTaskDelay;
                         if (delay > TimeSpan.Zero)
                         {
+                            operationLogService.Log($"Waiting for {delay.TotalSeconds} seconds before checking public IP");
                             await System.Threading.Tasks.Task.Delay(delay);
                         }
+                        operationLogService.Log("Checking public IP address");
                         var currentIp = await dynamicEndpointService.GetPublicIpv6Async();
                         if (!string.IsNullOrEmpty(currentIp))
                         {
+                            operationLogService.Log($"Public IP address found: {currentIp}");
+                            operationLogService.Log("Updating server endpoint with new public IP");
                             await dynamicEndpointService.UpdateEndpointAsync(currentIp);
+                            operationLogService.Log("Server endpoint updated successfully");
+                        }
+                        else
+                        {
+                            operationLogService.Log("No public IP address found");
+                        }
+                        
+                        // Auto save and sync configuration (simulate user clicking save button)
+                        operationLogService.Log("Auto saving and syncing server configuration");
+                        try
+                        {
+                            // Load current server configuration
+                            var serverConfig = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
+                            
+                            // Save to data file
+                            serverConfig.ToConfiguration().SaveToFile(ServerConfigurationPrerequisite.ServerDataPath);
+                            operationLogService.Log("Server configuration saved to data file");
+                            
+                            // Save to WG config file
+                            var wgConfig = serverConfig.ToConfiguration<ServerConfiguration>();
+                            
+                            // Merge client configurations if they exist
+                            if (Directory.Exists(ClientConfigurationsPrerequisite.ClientDataDirectory))
+                            {
+                                foreach (string clientFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
+                                {
+                                    var clientConfig = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientFile));
+                                    if (clientConfig.IsEnabledProperty.Value == true.ToString())
+                                    {
+                                        wgConfig = wgConfig.Merge(clientConfig.ToConfiguration<ServerConfiguration>());
+                                    }
+                                }
+                                operationLogService.Log("Client configurations merged");
+                            }
+                            
+                            wgConfig.SaveToFile(ServerConfigurationPrerequisite.ServerWGPath);
+                            operationLogService.Log("Server configuration saved to WG file");
+                            
+                            // Sync configuration to tunnel service
+                            using (TemporaryFile tempFile = new TemporaryFile(ServerConfigurationPrerequisite.ServerWGPath, ServerConfigurationPrerequisite.ServerWGPathWithCustomTunnelName))
+                            {
+                                networkService.SyncConfiguration(GlobalAppSettings.Instance.TunnelServiceName, tempFile.NewFilePath);
+                                operationLogService.Log("Server configuration synced to tunnel service");
+                            }
+                            
+                            operationLogService.Log("Auto save and sync completed successfully");
+                        }
+                        catch (Exception ex)
+                        {
+                            operationLogService.Log($"Error during auto save and sync: {ex.Message}");
                         }
                     });
+                }
+                else
+                {
+                    operationLogService.Log("Public IP auto-check skipped: prerequisites not met");
                 }
             }
 

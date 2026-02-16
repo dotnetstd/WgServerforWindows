@@ -22,8 +22,12 @@ namespace WgServerforWindows.Models
         public List<PrerequisiteItem> TunnelItems => PrerequisiteItems.Where(i => i is not SettingsPrerequisite).ToList();
         public List<PrerequisiteItem> SettingsItems => PrerequisiteItems.Where(i => i is SettingsPrerequisite).ToList();
 
-        public MainWindowModel(INetworkService networkService)
+        public IOperationLogService OperationLogService { get; }
+
+        public MainWindowModel(INetworkService networkService, IOperationLogService operationLogService)
         {
+            OperationLogService = operationLogService;
+            
             // Never put quotes around config file values
             Configuration.OutputRawStringValues = true;
 

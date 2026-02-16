@@ -604,6 +604,15 @@ namespace WgServerforWindows.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Operation Logs.
+        /// </summary>
+        public static string OperationLogs {
+            get {
+                return ResourceManager.GetString("OperationLogs", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Auto Refresh.
         /// </summary>
         public static string AutoRefresh {
@@ -627,6 +636,51 @@ namespace WgServerforWindows.Properties {
         public static string DynamicIpSyncDescription {
             get {
                 return ResourceManager.GetString("DynamicIpSyncDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Auto Login (WinServer 2025).
+        /// </summary>
+        public static string WindowsAutoLogin {
+            get {
+                return ResourceManager.GetString("WindowsAutoLogin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Auto Login.
+        /// </summary>
+        public static string EnableAutoLogin {
+            get {
+                return ResourceManager.GetString("EnableAutoLogin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically log in to Windows desktop on startup without entering credentials. Requires administrator privileges..
+        /// </summary>
+        public static string EnableAutoLoginDescription {
+            get {
+                return ResourceManager.GetString("EnableAutoLoginDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
 
