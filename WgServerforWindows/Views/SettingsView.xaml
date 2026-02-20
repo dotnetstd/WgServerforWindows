@@ -77,66 +77,42 @@
                                   IsChecked="{Binding Settings.IsPublicIpCheckOnStartup}"
                                   Margin="0,10,0,5"/>
                         <TextBlock Text="{x:Static properties:Resources.EnablePublicIpCheckOnAppStartDescription}"
-                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,0"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Windows Auto Login Section -->
-                <Border Style="{StaticResource ModernCardStyle}" Margin="0,0,0,10">
-                    <StackPanel>
-                        <TextBlock Text="{x:Static properties:Resources.WindowsAutoLogin}" FontWeight="Bold" Margin="0,0,0,10"/>
-
-                        <!-- Auto Login Enabled -->
-                        <CheckBox Content="{x:Static properties:Resources.EnableAutoLogin}" 
-                                  IsChecked="{Binding Settings.IsAutoLoginEnabled}" 
-                                  Margin="0,0,0,5"/>
-                        <TextBlock Text="{x:Static properties:Resources.EnableAutoLoginDescription}"
                                    FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="25,0,0,10"/>
 
-                        <!-- Username -->
-                        <StackPanel Margin="0,5,0,5" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
-                            <TextBlock Text="{x:Static properties:Resources.Username}" Margin="0,0,0,3"/>
-                            <TextBox Text="{Binding Settings.AutoLoginUsername, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="300" HorizontalAlignment="Left" MaxWidth="300"/>
+                        <!-- Background Task Settings -->
+                        <TextBlock Text="后台任务设置" FontWeight="Bold" Margin="0,10,0,10"/>
+                        
+                        <!-- NAT Check Interval -->
+                        <StackPanel Margin="0,5,0,5">
+                            <TextBlock Text="NAT检查间隔 (分钟)" Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding Settings.NatCheckIntervalMinutes, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="100" HorizontalAlignment="Left" MaxWidth="100" InputScope="Number"/>
                         </StackPanel>
 
-                        <!-- Password -->
-                        <StackPanel Margin="0,5,0,0" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
-                            <TextBlock Text="{x:Static properties:Resources.Password}" Margin="0,0,0,3"/>
-                            <PasswordBox x:Name="PasswordBox" Width="300" HorizontalAlignment="Left" MaxWidth="300"
-                                         PasswordChanged="PasswordBox_PasswordChanged"/>
+                        <!-- Public IP Check Interval -->
+                        <StackPanel Margin="0,5,0,5">
+                            <TextBlock Text="公网IP检查间隔 (分钟)" Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding Settings.PublicIpCheckIntervalMinutes, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="100" HorizontalAlignment="Left" MaxWidth="100" InputScope="Number"/>
                         </StackPanel>
 
-                        <!-- Validate Button -->
-                        <StackPanel Margin="0,10,0,0" IsEnabled="{Binding Settings.IsAutoLoginEnabled}">
-                            <Button Content="验证凭据" 
-                                    Click="ValidateCredentialsButton_Click"
-                                    Width="150" HorizontalAlignment="Left" MaxWidth="150"/>
+                        <!-- Configuration Sync Interval -->
+                        <StackPanel Margin="0,5,0,5">
+                            <TextBlock Text="配置同步间隔 (分钟)" Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding Settings.ConfigurationSyncIntervalMinutes, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="100" HorizontalAlignment="Left" MaxWidth="100" InputScope="Number"/>
                         </StackPanel>
-                    </StackPanel>
-                </Border>
 
-                <!-- Automatic Desktop Login Section -->
-                <Border Style="{StaticResource ModernCardStyle}" Margin="0,0,0,10">
-                    <StackPanel>
-                        <TextBlock Text="自动进入桌面" FontWeight="Bold" Margin="0,0,0,10"/>
-                        <TextBlock Text="通过修改注册表实现Windows自动登录并进入桌面，无需用户手动登录。" 
-                                   FontStyle="Italic" FontSize="11" Opacity="0.7" Margin="0,0,0,15"/>
-
-                        <!-- Action Buttons -->
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <Button Content="启用自动进入桌面" 
-                                    Click="EnableAutoDesktopLoginButton_Click"
-                                    Width="200" HorizontalAlignment="Left" MaxWidth="200" Margin="0,0,10,0"/>
-                            <Button Content="打开用户账户设置(netplwiz)" 
-                                    Click="OpenNetplwizButton_Click"
-                                    Width="250" HorizontalAlignment="Left" MaxWidth="250" Margin="0,0,10,0"/>
-                            <Button Content="还原设置" 
-                                    Click="RestoreAutoDesktopLoginButton_Click"
-                                    Width="150" HorizontalAlignment="Left" MaxWidth="150"/>
+                        <!-- Max Task Retries -->
+                        <StackPanel Margin="0,5,0,5">
+                            <TextBlock Text="最大任务重试次数" Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding Settings.MaxTaskRetries, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="100" HorizontalAlignment="Left" MaxWidth="100" InputScope="Number"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
+
+
 
                 <!-- Settings Prerequisite Items -->
                 <ItemsControl ItemsSource="{Binding SettingsItems}">

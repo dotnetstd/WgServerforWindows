@@ -62,9 +62,10 @@ namespace WgServerforWindows.Models
                 .Property(a => a.IsAutoStartEnabled)
                 .Property(a => a.IsAutoEnableNatOnStartup)
                 .Property(a => a.IsPublicIpCheckOnStartup)
-                .Property(a => a.IsAutoLoginEnabled)
-                .Property(a => a.AutoLoginUsername)
-                .Property(a => a.AutoLoginPassword)
+                .Property(a => a.NatCheckIntervalMinutes)
+                .Property(a => a.PublicIpCheckIntervalMinutes)
+                .Property(a => a.ConfigurationSyncIntervalMinutes)
+                .Property(a => a.MaxTaskRetries)
                 .Track(this);
                 
             _isLoading = false;
@@ -169,57 +170,71 @@ namespace WgServerforWindows.Models
         }
         private bool _isPublicIpCheckOnStartup;
 
-        /// <summary>
-        /// Whether auto-login is enabled
-        /// </summary>
-        public bool IsAutoLoginEnabled
-        {
-            get => _isAutoLoginEnabled;
-            set
-            {
-                if (Set(nameof(IsAutoLoginEnabled), ref _isAutoLoginEnabled, value))
-                {
-                    if (!_isLoading)
-                    {
-                        UpdateAutoLogin(value);
-                    }
-                    Save();
-                }
-            }
-        }
-        private bool _isAutoLoginEnabled;
+
 
         /// <summary>
-        /// Auto-login username
+        /// NAT check interval in minutes
         /// </summary>
-        public string AutoLoginUsername
+        public int NatCheckIntervalMinutes
         {
-            get => _autoLoginUsername ?? string.Empty;
+            get => _natCheckIntervalMinutes;
             set
             {
-                if (Set(nameof(AutoLoginUsername), ref _autoLoginUsername, value))
+                if (Set(nameof(NatCheckIntervalMinutes), ref _natCheckIntervalMinutes, value))
                 {
                     Save();
                 }
             }
         }
-        private string _autoLoginUsername;
+        private int _natCheckIntervalMinutes = 5; // Default: 5 minutes
 
         /// <summary>
-        /// Auto-login password
+        /// Public IP check interval in minutes
         /// </summary>
-        public string AutoLoginPassword
+        public int PublicIpCheckIntervalMinutes
         {
-            get => _autoLoginPassword ?? string.Empty;
+            get => _publicIpCheckIntervalMinutes;
             set
             {
-                if (Set(nameof(AutoLoginPassword), ref _autoLoginPassword, value))
+                if (Set(nameof(PublicIpCheckIntervalMinutes), ref _publicIpCheckIntervalMinutes, value))
                 {
                     Save();
                 }
             }
         }
-        private string _autoLoginPassword;
+        private int _publicIpCheckIntervalMinutes = 10; // Default: 10 minutes
+
+        /// <summary>
+        /// Configuration sync interval in minutes
+        /// </summary>
+        public int ConfigurationSyncIntervalMinutes
+        {
+            get => _configurationSyncIntervalMinutes;
+            set
+            {
+                if (Set(nameof(ConfigurationSyncIntervalMinutes), ref _configurationSyncIntervalMinutes, value))
+                {
+                    Save();
+                }
+            }
+        }
+        private int _configurationSyncIntervalMinutes = 15; // Default: 15 minutes
+
+        /// <summary>
+        /// Maximum number of retries for background tasks
+        /// </summary>
+        public int MaxTaskRetries
+        {
+            get => _maxTaskRetries;
+            set
+            {
+                if (Set(nameof(MaxTaskRetries), ref _maxTaskRetries, value))
+                {
+                    Save();
+                }
+            }
+        }
+        private int _maxTaskRetries = 3; // Default: 3 retries
 
         private void UpdateAutoStart(bool enable)
         {
@@ -244,110 +259,6 @@ namespace WgServerforWindows.Models
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to update auto-start: {ex.Message}");
-            }
-        }
-
-        private bool ValidateCredentials(string username, string password)
-        {
-            try
-            {
-                using (var context = new System.DirectoryServices.AccountManagement.PrincipalContext(
-                    System.DirectoryServices.AccountManagement.ContextType.Machine))
-                {
-                    return context.ValidateCredentials(username, password);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"凭据验证失败: {ex.Message}");
-                return false;
-            }
-        }
-
-        private void UpdateAutoLogin(bool enable)
-        {
-            string winlogonKey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
-            
-            try
-            {
-                using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(winlogonKey, true))
-                {
-                    if (key == null)
-                    {
-                        throw new Exception("无法打开Winlogon注册表键。请确保以管理员权限运行此应用程序。");
-                    }
-                    
-                    if (enable)
-                    {
-                        // 验证输入
-                        if (string.IsNullOrWhiteSpace(AutoLoginUsername))
-                        {
-                            throw new Exception("请输入有效的用户名。");
-                        }
-                        
-                        if (string.IsNullOrWhiteSpace(AutoLoginPassword))
-                        {
-                            throw new Exception("请输入有效的密码。");
-                        }
-                        
-                        // 验证凭据有效性
-                        if (!ValidateCredentials(AutoLoginUsername, AutoLoginPassword))
-                        {
-                            throw new Exception("输入的用户名或密码无效，请检查并重新输入。");
-                        }
-                        
-                        // 启用自动登录
-                        key.SetValue("AutoAdminLogon", 1, Microsoft.Win32.RegistryValueKind.DWord);
-                        key.SetValue("DefaultUserName", AutoLoginUsername);
-                        key.SetValue("DefaultPassword", AutoLoginPassword);
-                        
-                        // 添加DefaultDomainName（如果不存在）
-                        if (key.GetValue("DefaultDomainName") == null)
-                        {
-                            try
-                            {
-                                key.SetValue("DefaultDomainName", Environment.MachineName);
-                            }
-                            catch { /* 忽略域设置错误 */ }
-                        }
-                        
-                        // 确保AutoLogonCount设置（防止某些系统限制）
-                        try
-                        {
-                            key.SetValue("AutoLogonCount", 9999, Microsoft.Win32.RegistryValueKind.DWord);
-                        }
-                        catch { /* 忽略此设置错误 */ }
-                        
-                        // 对于Windows Server 2025，可能需要额外的设置
-                        try
-                        {
-                            // 禁用安全登录（如果启用）
-                            key.SetValue("ForceAutoLogon", 1, Microsoft.Win32.RegistryValueKind.DWord);
-                        }
-                        catch { /* 忽略此设置错误 */ }
-                    }
-                    else
-                    {
-                        // 禁用自动登录
-                        try { key.DeleteValue("AutoAdminLogon", false); } catch { }
-                        try { key.DeleteValue("DefaultUserName", false); } catch { }
-                        try { key.DeleteValue("DefaultPassword", false); } catch { }
-                        try { key.DeleteValue("AutoLogonCount", false); } catch { }
-                        try { key.DeleteValue("ForceAutoLogon", false); } catch { }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                string errorMessage = $"更新自动登录设置失败: {ex.Message}";
-                
-                if (ex is UnauthorizedAccessException)
-                {
-                    errorMessage += "\n\n请确保以管理员权限运行此应用程序。";
-                }
-                
-                System.Diagnostics.Debug.WriteLine($"Failed to update auto-login: {ex.Message}");
-                MessageBox.Show(errorMessage, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
