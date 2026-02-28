@@ -65,58 +65,62 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <StackPanel>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <TextBlock Text="{x:Static properties:Resources.SystemLogs}" Style="{StaticResource HeaderTextStyle}" Margin="0,0,0,10"/>
-                
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <RadioButton Content="{x:Static properties:Resources.SystemLogs}" 
-                                    IsChecked="{Binding SelectedLogType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=SystemLogs}" 
-                                    Margin="0,0,10,0"/>
-                        <RadioButton Content="{x:Static properties:Resources.OperationLogs}" 
-                                    IsChecked="{Binding SelectedLogType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=OperationLogs}"/>
-                    </StackPanel>
-                    
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
-                        <CheckBox Content="{x:Static properties:Resources.AutoRefresh}" 
-                                  IsChecked="{Binding IsAutoRefreshEnabled}" 
-                                  VerticalAlignment="Center" 
-                                  Margin="0,0,10,0"/>
-                        <Button Content="{x:Static properties:Resources.Refresh}" 
-                                Command="{Binding RefreshLogsCommand}" 
-                                Style="{StaticResource ModernButtonStyle}" 
-                                Margin="0,0,5,0"/>
-                        <Button Content="{x:Static properties:Resources.Clear}" 
-                                Command="{Binding ClearLogsCommand}" 
-                                Style="{StaticResource ModernButtonStyle}"/>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-
-            <Border Style="{StaticResource ModernCardStyle}" Padding="0">
-                <TextBox Text="{Binding LogContent}" 
-                         IsReadOnly="True" 
-                         VerticalScrollBarVisibility="Auto" 
-                         HorizontalScrollBarVisibility="Auto"
-                         Height="500"
-                         FontFamily="Consolas, Courier New, Monospace"
-                         FontSize="12"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Padding="10"/>
-            </Border>
-        </StackPanel>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <TextBlock Grid.Row="0" 
+                   Text="{x:Static properties:Resources.SystemLogs}" 
+                   Style="{StaticResource HeaderTextStyle}" 
+                   Margin="0,0,0,10"/>
+        
+        <!-- Controls Row -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton Content="{x:Static properties:Resources.SystemLogs}" 
+                            IsChecked="{Binding SelectedLogType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=SystemLogs}" 
+                            Margin="0,0,10,0"/>
+                <RadioButton Content="{x:Static properties:Resources.OperationLogs}" 
+                            IsChecked="{Binding SelectedLogType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=OperationLogs}"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <CheckBox Content="{x:Static properties:Resources.AutoRefresh}" 
+                          IsChecked="{Binding IsAutoRefreshEnabled}" 
+                          VerticalAlignment="Center" 
+                          Margin="0,0,10,0"/>
+                <Button Content="{x:Static properties:Resources.Refresh}" 
+                        Command="{Binding RefreshLogsCommand}" 
+                        Style="{StaticResource ModernButtonStyle}" 
+                        Margin="0,0,5,0"/>
+                <Button Content="{x:Static properties:Resources.Clear}" 
+                        Command="{Binding ClearLogsCommand}" 
+                        Style="{StaticResource ModernButtonStyle}"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Log Content - fills remaining space -->
+        <Border Grid.Row="2" Style="{StaticResource ModernCardStyle}" Padding="0">
+            <TextBox Text="{Binding LogContent}" 
+                     IsReadOnly="True" 
+                     VerticalScrollBarVisibility="Auto" 
+                     HorizontalScrollBarVisibility="Auto"
+                     FontFamily="Consolas, Courier New, Monospace"
+                     FontSize="12"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="10"
+                     AcceptsReturn="True"
+                     TextWrapping="NoWrap"/>
+        </Border>
     </Grid>
 </UserControl>
