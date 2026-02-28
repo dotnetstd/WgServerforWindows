@@ -10,6 +10,70 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type={x:Type models:PrerequisiteItem}}" d:DesignWidth="800"
              x:Name="This">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- Brushes -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#0078D7"/>
+            <SolidColorBrush x:Key="SuccessBrush" Color="#107C10"/>
+            <SolidColorBrush x:Key="ErrorBrush" Color="#C42B1C"/>
+            <SolidColorBrush x:Key="InfoBrush" Color="#0078D7"/>
+            
+            <!-- Styles -->
+            <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="#333333"/>
+            </Style>
+            
+            <Style x:Key="SubHeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="#666666"/>
+            </Style>
+            
+            <Style x:Key="ModernCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="#FFFFFF"/>
+                <Setter Property="BorderBrush" Value="#DDDDDD"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="3" Opacity="0.2" Direction="270" ShadowDepth="2"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <Style x:Key="ModernButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#0078D7"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Padding" Value="12,6"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center" 
+                                                  Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.9"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Opacity" Value="0.8"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <!-- Main Content Card -->
         <Border Visibility="{c:Binding !HasChildren, FalseToVisibility=Collapsed}">

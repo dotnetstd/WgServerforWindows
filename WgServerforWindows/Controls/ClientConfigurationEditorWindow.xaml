@@ -12,7 +12,8 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ClientConfigurationList}"
         Width="600" Height="600"
-        Title="{x:Static properties:Resources.ClientConfiguration}">
+        Title="{x:Static properties:Resources.ClientConfiguration}"
+        WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.ColumnDefinitions>

@@ -773,5 +773,8 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ValidateCredentials" xml:space="preserve">
     <value>Validate Credentials</value>
   </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
 </root>
 

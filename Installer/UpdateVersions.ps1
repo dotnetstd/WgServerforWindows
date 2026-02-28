@@ -53,7 +53,7 @@ for ($i = 0; $i -lt $versionInfo.Length; $i += 1) {
     }
 
     if ($line -match "DownloadLink") {
-        $versionInfo[$i] = "  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v$($newVersion)/WS4WSetup-$($newVersion).exe</DownloadLink>"
+        $versionInfo[$i] = "  <DownloadLink>https://github.com/dotnetstd/WgServerforWindows/releases/download/v$($newVersion)/WS4WSetup-$($newVersion).exe</DownloadLink>"
     }
 
     if ($line -match "DownloadFileName") {

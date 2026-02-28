@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -177,12 +177,12 @@ namespace WgServerforWindows.Models
 
         // The canExecute parameter is only needed for xctk:SplitButton, which uses ICommand.CanExecute to determine enabled status (instead of IsEnabled) when a Command is bound.
         // https://github.com/xceedsoftware/wpftoolkit/issues/1466
-        public RelayCommand ResolveCommand => _resolveCommand ??= new RelayCommand(PrerequisiteItem.Resolve, PrerequisiteItem.HasSubCommands ? PrerequisiteItem.CanResolveFunc : null);
+        public RelayCommand ResolveCommand => _resolveCommand ??= new RelayCommand(PrerequisiteItem.Resolve, PrerequisiteItem.HasSubCommands ? (PrerequisiteItem.CanResolveFunc ?? (() => true)) : null);
         private RelayCommand _resolveCommand;
 
         // The canExecute parameter is only needed for xctk:SplitButton, which uses ICommand.CanExecute to determine enabled status (instead of IsEnabled) when a Command is bound.
         // https://github.com/xceedsoftware/wpftoolkit/issues/1466
-        public RelayCommand ConfigureCommand => _configureCommand ??= new RelayCommand(PrerequisiteItem.Configure, PrerequisiteItem.HasSubCommands ? PrerequisiteItem.CanConfigureFunc : null);
+        public RelayCommand ConfigureCommand => _configureCommand ??= new RelayCommand(PrerequisiteItem.Configure, PrerequisiteItem.HasSubCommands ? (PrerequisiteItem.CanConfigureFunc ?? (() => true)) : null);
         private RelayCommand _configureCommand;
 
         #endregion

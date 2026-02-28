@@ -9,7 +9,38 @@
         mc:Ignorable="d"
         Title="{Binding Title}" Height="700" Width="1000"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundBrush}">
+        Background="#F3F3F3">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- 直接在窗口级别定义必要的资源 -->
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="BorderBrush" Color="#DDDDDD"/>
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#0078D7"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#666666"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <!-- ModernNavigationButtonStyle -->
+            <Style x:Key="ModernNavigationButtonStyle" TargetType="RadioButton">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border Background="Transparent" Padding="10">
+                                <TextBlock Text="{TemplateBinding Content}" Foreground="#666666" FontWeight="Medium" FontSize="{TemplateBinding FontSize}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Foreground" Value="#0078D7"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,7 +54,7 @@
                 <!-- App Title and Version -->
                 <StackPanel Orientation="Horizontal" Margin="10,20,0,30">
                     <TextBlock Text="{x:Static properties:Resources.WS4W}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
-                    <TextBlock Text="{Binding AppVersion}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Bottom" Margin="5,0,0,5"/>
+                    <!--<TextBlock Text="{Binding AppVersion}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Bottom" Margin="5,0,0,5"/>-->
                 </StackPanel>
 
                 <!-- Navigation Buttons -->

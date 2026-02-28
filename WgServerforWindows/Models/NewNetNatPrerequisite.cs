@@ -56,10 +56,15 @@ namespace WgServerforWindows.Models
 
         public override void Resolve()
         {
-            Resolve(default);
+            Resolve(default, true);
         }
 
         public void Resolve(string serverDataPath)
+        {
+            Resolve(serverDataPath, true);
+        }
+
+        public void Resolve(string serverDataPath, bool isInteractive)
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
@@ -88,47 +93,51 @@ namespace WgServerforWindows.Models
             {
                 // If we get here, likely New-NetNat failed.
                 // Windows is telling us that New-NetNat is unsupported. Ask the user if they want to try enabling Hyper-V.
-                var res = MessageBox.Show(Resources.PromptForHyperV, Resources.WS4W, MessageBoxButton.YesNo);
-
-                if (res == MessageBoxResult.Yes)
+                WaitCursor.SetOverrideCursor(null);
+                
+                if (isInteractive)
                 {
-                    // Let's try to enabled Hyper-V.
-                    if (_networkService.EnableHyperV())
+                    var res = MessageBox.Show(Resources.PromptForHyperV, Resources.WS4W, MessageBoxButton.YesNo);
+
+                    if (res == MessageBoxResult.Yes)
                     {
-                        // Seems to have installed successfully. Prompt for reboot
-                        MessageBox.Show(Resources.PromptForHyperVReboot, Resources.WS4W, MessageBoxButton.OK);
+                        // Let's try to enabled Hyper-V.
+                        WaitCursor.SetOverrideCursor(Cursors.Wait);
+                        if (_networkService.EnableHyperV())
+                        {
+                            // Seems to have installed successfully. Prompt for reboot
+                            WaitCursor.SetOverrideCursor(null);
+                            MessageBox.Show(Resources.PromptForHyperVReboot, Resources.WS4W, MessageBoxButton.OK);
+                        }
+                        else
+                        {
+                            // If we get here, Hyper-V install failed for some reason (e.g., Windows Home). Recommend ICS.
+                            new UnhandledErrorWindow
+                            {
+                                DataContext = new UnhandledErrorWindowModel
+                                {
+                                    Title = Resources.Error,
+                                    Text = Resources.HyperVErrorNatRoutingNotSupported,
+                                    Exception = ex
+                                }
+                            }.ShowDialog();
+                        }
                     }
                     else
                     {
-                        WaitCursor.SetOverrideCursor(null);
-
-                        // If we get here, the Hyper-V install failed for some reason (e.g., Windows Home). Recommend ICS.
+                        // If we get here, user chose not to install Hyper-V. Recommend ICS.
                         new UnhandledErrorWindow
                         {
                             DataContext = new UnhandledErrorWindowModel
                             {
                                 Title = Resources.Error,
-                                Text = Resources.HyperVErrorNatRoutingNotSupported,
+                                Text = Resources.NatRoutingNotSupported,
                                 Exception = ex
                             }
                         }.ShowDialog();
-                    }
+                     }
                 }
-                else
-                {
-                    WaitCursor.SetOverrideCursor(null);
-
-                    // If we get here, the user chose not to install Hyper-V. Recommend ICS.
-                    new UnhandledErrorWindow
-                    {
-                        DataContext = new UnhandledErrorWindowModel
-                        {
-                            Title = Resources.Error,
-                            Text = Resources.NatRoutingNotSupported,
-                            Exception = ex
-                        }
-                    }.ShowDialog();
-                }
+                // For non-interactive mode, we just log the error and continue
             }
 
             Refresh();

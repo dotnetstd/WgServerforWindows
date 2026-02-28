@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ServerConfiguration}"
         Width="600" Height="500"
-        Title="{x:Static properties:Resources.ServerConfiguration}">
+        Title="{x:Static properties:Resources.ServerConfiguration}"
+        WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.ColumnDefinitions>

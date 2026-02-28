@@ -7,11 +7,21 @@
              xmlns:properties="clr-namespace:WgServerforWindows.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- Styles -->
+            <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="26"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="#333333"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
-        <StackPanel>
-            <TextBlock Text="{x:Static properties:Resources.TunnelsConfiguration}" Style="{StaticResource HeaderTextStyle}" Margin="0,0,0,20"/>
-            
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="10">
+                <TextBlock Text="{x:Static properties:Resources.TunnelsConfiguration}" Style="{StaticResource HeaderTextStyle}" Margin="0,0,0,20"/>
+                
                 <ItemsControl ItemsSource="{Binding TunnelItems}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -19,7 +29,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

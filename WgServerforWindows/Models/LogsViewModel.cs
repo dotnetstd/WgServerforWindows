@@ -6,9 +6,16 @@ using WgServerforWindows.Services.Interfaces;
 
 namespace WgServerforWindows.Models
 {
+    public enum LogType
+    {
+        SystemLogs,
+        OperationLogs
+    }
+
     public partial class LogsViewModel : ObservableObject
     {
         private readonly ILogService _logService;
+        private readonly IOperationLogService _operationLogService;
         private readonly IToastService _toastService;
         private System.Timers.Timer _autoRefreshTimer;
 
@@ -20,6 +27,9 @@ namespace WgServerforWindows.Models
 
         [ObservableProperty]
         private bool _isAutoRefreshEnabled;
+
+        [ObservableProperty]
+        private LogType _selectedLogType = LogType.OperationLogs;
 
         partial void OnIsAutoRefreshEnabledChanged(bool value)
         {
@@ -33,9 +43,15 @@ namespace WgServerforWindows.Models
             }
         }
 
-        public LogsViewModel(ILogService logService, IToastService toastService)
+        partial void OnSelectedLogTypeChanged(LogType value)
+        {
+            RefreshLogsCommand.Execute(null);
+        }
+
+        public LogsViewModel(ILogService logService, IOperationLogService operationLogService, IToastService toastService)
         {
             _logService = logService;
+            _operationLogService = operationLogService;
             _toastService = toastService;
 
             _autoRefreshTimer = new System.Timers.Timer(5000); // 5 seconds
@@ -56,6 +72,21 @@ namespace WgServerforWindows.Models
             await RefreshLogsAsync(true);
         }
 
+        [RelayCommand]
+        private void ClearLogs()
+        {
+            if (SelectedLogType == LogType.OperationLogs)
+            {
+                _operationLogService.ClearLogs();
+                _toastService.Show("Operation logs cleared", ToastType.Success);
+                RefreshLogsCommand.Execute(null);
+            }
+            else
+            {
+                _toastService.Show("System logs cannot be cleared from this interface", ToastType.Info);
+            }
+        }
+
         private async Task RefreshLogsAsync(bool showToast)
         {
             if (IsLoading) return;
@@ -64,14 +95,30 @@ namespace WgServerforWindows.Models
             
             try
             {
-                var logs = await _logService.GetLogsAsync();
-                if (string.IsNullOrWhiteSpace(logs))
+                string logs;
+                if (SelectedLogType == LogType.SystemLogs)
                 {
-                    LogContent = "No logs available or failed to retrieve logs.";
+                    logs = await _logService.GetLogsAsync();
+                    if (string.IsNullOrWhiteSpace(logs))
+                    {
+                        LogContent = "No system logs available or failed to retrieve logs.";
+                    }
+                    else
+                    {
+                        LogContent = logs;
+                    }
                 }
                 else
                 {
-                    LogContent = logs;
+                    logs = _operationLogService.GetAllLogs();
+                    if (string.IsNullOrWhiteSpace(logs))
+                    {
+                        LogContent = "No operation logs available.";
+                    }
+                    else
+                    {
+                        LogContent = logs;
+                    }
                 }
 
                 if (showToast)

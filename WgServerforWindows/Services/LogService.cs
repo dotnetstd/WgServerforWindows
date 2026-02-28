@@ -52,8 +52,6 @@ namespace WgServerforWindows.Services
                     catch { }
                 }
             }
-
-            return string.Empty;
         }
     }
 }
